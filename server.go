@@ -43,6 +43,14 @@ type TemplateContext struct {
 	Context interface{}
 }
 
+func display404(w http.ResponseWriter) error {
+	return display(w, "404", &Page{Title: "Not Found"})
+}
+
+func display500(w http.ResponseWriter) error {
+	return display(w, "500", &Page{Title: "Error"})
+}
+
 func display(w http.ResponseWriter, tmpl string, page *Page) error {
 	return displayWithContext(w, tmpl, page, nil)
 }
