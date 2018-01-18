@@ -5,6 +5,7 @@ type db interface {
 	SelectContact(int) (*Contact, error)
 	UpdateContact(*Contact) error
 	NewContact() (int, error)
+	DeleteContact(int) error
 }
 
 type Model struct {

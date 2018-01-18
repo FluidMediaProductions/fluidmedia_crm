@@ -16,6 +16,7 @@ type pgDb struct {
 	sqlSelectContact *sqlx.Stmt
 	sqlUpdateContact *sqlx.NamedStmt
 	sqlInsertContact *sqlx.NamedStmt
+	sqlDeleteContact *sqlx.Stmt
 }
 
 func InitDb(cfg Config) (*pgDb, error) {

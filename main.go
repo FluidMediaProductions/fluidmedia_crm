@@ -84,6 +84,18 @@ func handleContactsNew(m *model.Model, page *Page, w http.ResponseWriter, r *htt
 	http.Redirect(w, r, fmt.Sprintf("/contacts/%d", contactId), 302)
 }
 
+func handleContactsDelete(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+	err := m.DeleteContact(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		display500(w)
+		return
+	}
+	http.Redirect(w, r, "/contacts", 302)
+}
+
 func main() {
 	cfg := parseFlags()
 
@@ -116,6 +128,12 @@ func main() {
 			Path: "/contacts/new",
 			Methods: []string{"GET"},
 			Handler: handleContactsNew,
+		},
+		{
+			InMenu: false,
+			Path: "/contacts/del/{id:[0-9]+}",
+			Methods: []string{"GET"},
+			Handler: handleContactsDelete,
 		},
 	}
 

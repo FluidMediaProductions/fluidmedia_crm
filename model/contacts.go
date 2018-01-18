@@ -22,3 +22,7 @@ func (m *Model) SaveContact(contact *Contact) error {
 func (m *Model) NewContact() (int, error) {
 	return m.db.NewContact()
 }
+
+func (m *Model) DeleteContact(id int) error {
+	return m.db.DeleteContact(id)
+}

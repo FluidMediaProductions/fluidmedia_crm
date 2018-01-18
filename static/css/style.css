@@ -8046,6 +8046,7 @@ html.ie11 .bs-searchbox .form-control {
 }
 .table td.fit,
 .table th.fit {
-  white-space: nowrap;
-  width: 1%;
+  width:auto;
+  text-align:right;
+  white-space: nowrap
 }

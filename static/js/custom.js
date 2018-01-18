@@ -7,4 +7,20 @@ $(function () {
         borderRadius: '0',
         railBorderRadius: '0'
     });
+
+    $("a[data-confirm]").on('click', function () {
+        var $a = $(this);
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to undo this operation!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#c9302c",
+            confirmButtonText: "Yes, do it!",
+            closeOnConfirm: false
+        }, function () {
+            window.location = $a.attr("href");
+        });
+        return false;
+    });
 });
