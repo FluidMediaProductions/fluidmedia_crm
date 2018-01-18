@@ -43,6 +43,7 @@ func (p *pgDb) createTablesIfNotExist() error {
        id SERIAL NOT NULL PRIMARY KEY,
        image TEXT NOT NULL,
        name TEXT NOT NULL,
+       state INTEGER NOT NULL,
        email TEXT);
     `
 	if rows, err := p.dbConn.Query(createSql); err != nil {

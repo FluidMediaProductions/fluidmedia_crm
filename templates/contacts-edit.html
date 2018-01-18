@@ -9,22 +9,42 @@
                     <div class="header">
                         <h2>Profile</h2>
                     </div>
-                    <div class="body table-responsive">
-                        <div class="col-sm-2">
-                            <img src="/static/images/{{ .Context.Image }}" class="img-circle" style="width: 100%" alt="">
-                        </div>
-                        <div class="col-sm-10">
-                            <div class="form-group">
-                                <div class="form-line form-group-lg form-float">
-                                    <input class="form-control" name="name" type="text" value="{{ .Context.Name }}">
-                                    <label class="form-label">Name</label>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-2">
+                                <img src="/static/images/{{ .Context.Contact.Image }}" class="img-circle" style="width: 100%" alt="">
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="form-group">
+                                    <div class="form-line form-group-lg form-float">
+                                        <input class="form-control" name="name" type="text" value="{{ .Context.Contact.Name }}">
+                                        <label class="form-label">Name</label>
+                                    </div>
+                                </div>
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input class="form-control" name="email" type="text" value="{{ .Context.Contact.Email }}">
+                                        <label class="form-label">Email</label>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group form-float">
-                                <div class="form-line">
-                                    <input class="form-control" name="email" type="text" value="{{ .Context.Email }}">
-                                    <label class="form-label">Email</label>
-                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="header">
+                        <h2>State</h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="form-group">
+                                <select class="form-control show-tick" name="state">
+                                    {{ range $id, $name := .Context.ContactStates }}
+                                        <option value="{{ $id }}" {{ if eq $id $.Context.Contact.State }}selected{{ end }}>{{ index $name 0 }}</option>
+                                    {{ end }}
+                                </select>
                             </div>
                         </div>
                     </div>

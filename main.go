@@ -35,18 +35,24 @@ func handleIndex(m *model.Model, page *Page, w http.ResponseWriter, r *http.Requ
 
 func handleContacts(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
 	type ContactsContext struct {
+		ContactStates map[int][2]string
 		Contacts []*model.Contact
 	}
 	contacts, err := m.Contacts()
 	if err != nil {
+		log.Printf("Error getting contacts: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}
-	displayWithContext(w, "contacts", page, &ContactsContext{Contacts: contacts})
+	displayWithContext(w, "contacts", page, &ContactsContext{Contacts: contacts, ContactStates: m.ContactStates()})
 }
 
 func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+	type ContactContext struct {
+		ContactStates map[int][2]string
+		Contact *model.Contact
+	}
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	contact, err := m.Contact(id)
@@ -55,12 +61,13 @@ func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *ht
 		display404(w)
 		return
 	} else if err != nil {
+		log.Printf("Error getting contact: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}
 	if r.Method == "GET" {
-		displayWithContext(w, "contacts-edit", page, contact)
+		displayWithContext(w, "contacts-edit", page, &ContactContext{Contact: contact, ContactStates: m.ContactStates()})
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		newContact := &model.Contact{
@@ -77,6 +84,7 @@ func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *ht
 func handleContactsNew(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
 	contactId, err := m.NewContact()
 	if err != nil {
+		log.Printf("Error creating new contact: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
@@ -89,6 +97,7 @@ func handleContactsDelete(m *model.Model, page *Page, w http.ResponseWriter, r *
 	id, _ := strconv.Atoi(vars["id"])
 	err := m.DeleteContact(id)
 	if err != nil {
+		log.Printf("Error deleting contact: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
@@ -98,7 +107,6 @@ func handleContactsDelete(m *model.Model, page *Page, w http.ResponseWriter, r *
 
 func main() {
 	cfg := parseFlags()
-
 	pages = []*Page{
 		{
 			Title: "Home",
