@@ -8,7 +8,7 @@ import (
 	"log"
 	"github.com/gorilla/mux"
 	"strconv"
-	"fmt"
+	"database/sql"
 )
 
 type Config struct {
@@ -47,11 +47,28 @@ func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *ht
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	contact, err := m.Contact(id)
-	if err != nil {
+	if err == sql.ErrNoRows {
+		w.WriteHeader(http.StatusNotFound)
+		display404(w)
+		return
+	} else if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprint(err)))
+		display500(w)
+		return
 	}
-	displayWithContext(w, "contacts-edit", page, contact)
+	if r.Method == "GET" {
+		displayWithContext(w, "contacts-edit", page, contact)
+	} else if r.Method == "POST" {
+		r.ParseForm()
+		newContact := &model.Contact{
+			ID: id,
+			Name: r.Form.Get("name"),
+			Email: r.Form.Get("email"),
+			Image: contact.Image,
+		}
+		m.SaveContact(newContact)
+		http.Redirect(w, r, "/contacts", 302)
+	}
 }
 
 func main() {

@@ -71,10 +71,14 @@ func handlerWrapper(handler func(*model.Model, *Page, http.ResponseWriter, *http
 	}
 }
 
+func handle404(w http.ResponseWriter, r *http.Request) {
+	display404(w)
+}
+
 func staticHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path[1:]
 	log.Println(path)
-	data, err := ioutil.ReadFile(string(path))
+	data, err := ioutil.ReadFile("static/" + string(path))
 
 	if err == nil {
 		var contentType string
@@ -108,7 +112,10 @@ func serveHttp(model *model.Model, pages []*Page, listenSpec string) {
 		r.Methods(page.Methods...).Path(page.Path).HandlerFunc(handlerWrapper(page.Handler, model, page))
 	}
 
-	http.HandleFunc("/static/", staticHandler)
+	r.NotFoundHandler = http.HandlerFunc(handle404)
+
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", http.HandlerFunc(staticHandler)))
+
 	http.Handle("/", r)
 
 	log.Println("Listening...")
