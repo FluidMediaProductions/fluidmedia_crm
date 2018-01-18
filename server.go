@@ -38,13 +38,20 @@ var pages []*Page
 type TemplateContext struct {
 	Page *Page
 	Pages []*Page
+	Context interface{}
 }
 
-func display(w http.ResponseWriter, tmpl string, page *Page) {
-	err := getTemplate().ExecuteTemplate(w, tmpl, &TemplateContext{Page: page, Pages: pages})
+func display(w http.ResponseWriter, tmpl string, page *Page) error {
+	return displayWithContext(w, tmpl, page, nil)
+}
+
+func displayWithContext(w http.ResponseWriter, tmpl string, page *Page, context interface{}) error {
+	err := getTemplate().ExecuteTemplate(w, tmpl, &TemplateContext{Page: page, Pages: pages, Context: context})
 	if err != nil {
 		log.Printf("Error rendering %s: %v", tmpl, err)
+		return err
 	}
+	return nil
 }
 
 
