@@ -18,7 +18,7 @@ func parseFlags() *Config {
 	cfg := &Config{}
 
 	flag.StringVar(&cfg.ListenSpec, "listen", "localhost:8080", "HTTP listen spec")
-	flag.StringVar(&cfg.Db.ConnectString, "db-connect", "user=postgres host=127.0.0.1 dbname=postres", "DB Connect String")
+	flag.StringVar(&cfg.Db.ConnectString, "db-connect", "user=postgres host=127.0.0.1 dbname=fluidmedia_crm", "DB Connect String")
 
 	flag.Parse()
 	return cfg
@@ -29,11 +29,11 @@ func handleIndex(model *model.Model, page *Page, w http.ResponseWriter, r *http.
 	display(w, "index", page)
 }
 
-func handleContacts(model *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleContacts(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
 	type ContactsContext struct {
 		Contacts []*model.Contact
 	}
-	contacts, err := model.Contacts()
+	contacts, err := m.Contacts()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
