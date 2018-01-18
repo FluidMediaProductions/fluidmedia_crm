@@ -3,7 +3,6 @@ package db
 import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/fluidmediaproductions/fluidmedia_crm/model"
 )
 
 type Config struct {
@@ -15,6 +14,7 @@ type pgDb struct {
 
 	sqlSelectContacts *sqlx.Stmt
 	sqlSelectContact *sqlx.Stmt
+	sqlUpdateContact *sqlx.NamedStmt
 }
 
 func InitDb(cfg Config) (*pgDb, error) {
@@ -52,27 +52,8 @@ func (p *pgDb) createTablesIfNotExist() error {
 }
 
 func (p *pgDb) prepareSqlStatements() (err error) {
-	if p.sqlSelectContacts, err = p.dbConn.Preparex("SELECT * FROM contacts"); err != nil {
-		return err
-	}
-	if p.sqlSelectContact, err = p.dbConn.Preparex(`SELECT * FROM contacts WHERE id=$1`); err != nil {
-		return err
-	}
+	if p.sqlSelectContacts, err = p.dbConn.Preparex("SELECT * FROM contacts"); err != nil { return err}
+	if p.sqlSelectContact, err = p.dbConn.Preparex(`SELECT * FROM contacts WHERE id=$1`); err != nil { return err }
+	if p.sqlUpdateContact, err = p.dbConn.PrepareNamed(`UPDATE contacts SET name=:name, email=:email, image=:image WHERE id=:id`); err != nil { return err }
 	return nil
-}
-
-func (p *pgDb) SelectContacts() ([]*model.Contact, error){
-	contacts := make([]*model.Contact, 0)
-	if err := p.sqlSelectContacts.Select(&contacts); err != nil {
-		return nil, err
-	}
-	return contacts, nil
-}
-
-func (p *pgDb) SelectContact(id int) (*model.Contact, error){
-	var contact model.Contact
-	if err := p.sqlSelectContact.Get(&contact, id); err != nil {
-		return nil, err
-	}
-	return &contact, nil
 }
