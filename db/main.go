@@ -14,6 +14,7 @@ type pgDb struct {
 	dbConn *sqlx.DB
 
 	sqlSelectContacts *sqlx.Stmt
+	sqlSelectContact *sqlx.Stmt
 }
 
 func InitDb(cfg Config) (*pgDb, error) {
@@ -54,13 +55,24 @@ func (p *pgDb) prepareSqlStatements() (err error) {
 	if p.sqlSelectContacts, err = p.dbConn.Preparex("SELECT * FROM contacts"); err != nil {
 		return err
 	}
+	if p.sqlSelectContact, err = p.dbConn.Preparex(`SELECT * FROM contacts WHERE id=$1`); err != nil {
+		return err
+	}
 	return nil
 }
 
 func (p *pgDb) SelectContacts() ([]*model.Contact, error){
-	people := make([]*model.Contact, 0)
-	if err := p.sqlSelectContacts.Select(&people); err != nil {
+	contacts := make([]*model.Contact, 0)
+	if err := p.sqlSelectContacts.Select(&contacts); err != nil {
 		return nil, err
 	}
-	return people, nil
+	return contacts, nil
+}
+
+func (p *pgDb) SelectContact(id int) (*model.Contact, error){
+	var contact model.Contact
+	if err := p.sqlSelectContact.Get(&contact, id); err != nil {
+		return nil, err
+	}
+	return &contact, nil
 }

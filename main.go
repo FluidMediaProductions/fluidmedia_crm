@@ -6,6 +6,9 @@ import (
 	"github.com/fluidmediaproductions/fluidmedia_crm/db"
 	"flag"
 	"log"
+	"github.com/gorilla/mux"
+	"strconv"
+	"fmt"
 )
 
 type Config struct {
@@ -25,7 +28,7 @@ func parseFlags() *Config {
 }
 
 
-func handleIndex(model *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleIndex(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
 	display(w, "index", page)
 }
 
@@ -38,6 +41,17 @@ func handleContacts(m *model.Model, page *Page, w http.ResponseWriter, r *http.R
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 	displayWithContext(w, "contacts", page, &ContactsContext{Contacts: contacts})
+}
+
+func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+	contact, err := m.Contact(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprint(err)))
+	}
+	displayWithContext(w, "contacts-edit", page, contact)
 }
 
 func main() {
@@ -59,6 +73,13 @@ func main() {
 			Path: "/contacts",
 			Methods: []string{"GET"},
 			Handler: handleContacts,
+		},
+		{
+			Title: "Edit contact",
+			InMenu: false,
+			Path: "/contacts/{id:[0-9]+}",
+			Methods: []string{"GET", "POST"},
+			Handler: handleContactsEdit,
 		},
 	}
 
