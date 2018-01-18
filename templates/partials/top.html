@@ -1,4 +1,4 @@
-{{ define "top" }}
+{{ define "partials/top" }}
 <nav class="navbar">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -11,8 +11,8 @@
                 <!-- Call Search -->
                 <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
                 <!-- #END# Call Search -->
-                {{ template "notifications" . }}
-                {{ template "tasks" . }}
+                {{ template "partials/notifications" . }}
+                {{ template "partials/tasks" . }}
                 <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
             </ul>
         </div>
@@ -21,9 +21,9 @@
 
 <section>
     <aside id="leftsidebar" class="sidebar">
-        {{ template "userinfo" . }}
+        {{ template "partials/userinfo" . }}
 
-        {{ template "menu" . }}
+        {{ template "partials/menu" . }}
 
         <div class="legal">
             <div class="copyright">
@@ -31,6 +31,6 @@
             </div>
         </div>
     </aside>
-    {{ template "rightsidebar" . }}
+    {{ template "partials/rightsidebar" . }}
 </section>
 {{ end }}
