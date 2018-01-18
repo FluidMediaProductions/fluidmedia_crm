@@ -47,6 +47,7 @@ func main() {
 		{
 			Title: "Home",
 			Icon: "home",
+			InMenu: true,
 			Path: "/",
 			Methods: []string{"GET"},
 			Handler: handleIndex,
@@ -54,6 +55,7 @@ func main() {
 		{
 			Title: "Contacts",
 			Icon: "person",
+			InMenu: true,
 			Path: "/contacts",
 			Methods: []string{"GET"},
 			Handler: handleContacts,
@@ -66,39 +68,6 @@ func main() {
 	}
 
 	modelInst := model.New(dbInst)
-
-	//contacts = []*model.Contact{
-	//	{
-	//		ID: 0,
-	//		Name: "Mark Otto",
-	//		Image: "user.png",
-	//		Email: "mdo@example.com",
-	//	},
-	//	{
-	//		ID: 1,
-	//		Name: "Jacob Thornton",
-	//		Image: "user.png",
-	//		Email: "fat@example.com",
-	//	},
-	//	{
-	//		ID: 2,
-	//		Name: "Larry the Bird",
-	//		Image: "user.png",
-	//		Email: "twitter@example.com",
-	//	},
-	//	{
-	//		ID: 3,
-	//		Name: "Larry Jellybean",
-	//		Image: "user.png",
-	//		Email: "lajelly@example.com",
-	//	},
-	//	{
-	//		ID: 4,
-	//		Name: "Larry Kikat",
-	//		Image: "user.png",
-	//		Email: "lakitkat@example.com",
-	//	},
-	//}
 
 	serveHttp(modelInst, pages, cfg.ListenSpec)
 }

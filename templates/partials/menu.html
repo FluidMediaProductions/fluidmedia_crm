@@ -3,12 +3,14 @@
     <ul class="list">
         <li class="header">MAIN NAVIGATION</li>
         {{ range .Pages }}
-            <li {{ if (eq .Path $.Page.Path) }}class="active"{{ end }}>
-                <a href="{{ .Path }}">
-                    <i class="material-icons">{{ .Icon }}</i>
-                    <span>{{ .Title }}</span>
-                </a>
-            </li>
+            {{ if .InMenu }}
+                <li {{ if (eq .Path $.Page.Path) }}class="active"{{ end }}>
+                    <a href="{{ .Path }}">
+                        <i class="material-icons">{{ .Icon }}</i>
+                        <span>{{ .Title }}</span>
+                    </a>
+                </li>
+            {{ end }}
         {{ end }}
     </ul>
 </div>

@@ -29,6 +29,7 @@ func getTemplate() *template.Template {
 type Page struct {
 	Title string
 	Icon string
+	InMenu bool
 	Path string
 	Methods []string
 	Handler func(*model.Model, *Page, http.ResponseWriter, *http.Request)
