@@ -1,0 +1,52 @@
+{{ define "header" }}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Fluid Media CRM</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <link href="static/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="static/plugins/node-waves/waves.css" rel="stylesheet" />
+    <link href="static/plugins/animate-css/animate.css" rel="stylesheet" />
+    <link href="static/plugins/morrisjs/morris.css" rel="stylesheet" />
+
+    <link href="static/css/style.css" rel="stylesheet">
+
+    <link href="static/css/themes/theme-indigo.css" rel="stylesheet" />
+</head>
+<body class="theme-indigo">
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="search-bar">
+        <div class="search-icon">
+            <i class="material-icons">search</i>
+        </div>
+        <input type="text" placeholder="START TYPING...">
+        <div class="close-search">
+            <i class="material-icons">close</i>
+        </div>
+    </div>
+
+    {{ template "top" . }}
+{{ end }}
