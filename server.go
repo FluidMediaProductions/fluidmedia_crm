@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"html/template"
 	"os"
+	"github.com/fluidmediaproductions/fluidmedia_crm/model"
 )
 
 func getTemplate() *template.Template {
@@ -30,7 +31,7 @@ type Page struct {
 	Icon string
 	Path string
 	Methods []string
-	Handler func(*Page, http.ResponseWriter, *http.Request)
+	Handler func(*model.Model, *Page, http.ResponseWriter, *http.Request)
 }
 
 var pages []*Page
@@ -55,9 +56,9 @@ func displayWithContext(w http.ResponseWriter, tmpl string, page *Page, context 
 }
 
 
-func handlerWrapper(handler func(*Page, http.ResponseWriter, *http.Request), page *Page) http.HandlerFunc {
+func handlerWrapper(handler func(*model.Model, *Page, http.ResponseWriter, *http.Request), model *model.Model, page *Page) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		handler(page, w, r)
+		handler(model, page, w, r)
 	}
 }
 
@@ -91,16 +92,16 @@ func staticHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func serveHttp(pages []*Page) {
+func serveHttp(model *model.Model, pages []*Page, listenSpec string) {
 	r := mux.NewRouter()
 
 	for _, page := range pages {
-		r.Methods(page.Methods...).Path(page.Path).HandlerFunc(handlerWrapper(page.Handler, page))
+		r.Methods(page.Methods...).Path(page.Path).HandlerFunc(handlerWrapper(page.Handler, model, page))
 	}
 
 	http.HandleFunc("/static/", staticHandler)
 	http.Handle("/", r)
 
 	log.Println("Listening...")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(listenSpec, nil)
 }
