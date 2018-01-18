@@ -38,6 +38,7 @@ func (p *pgDb) createTablesIfNotExist() error {
 	createSql := `
        CREATE TABLE IF NOT EXISTS contacts (
        id SERIAL NOT NULL PRIMARY KEY,
+       image TEXT NOT NULL,
        name TEXT NOT NULL,
        email TEXT);
     `
