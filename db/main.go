@@ -15,6 +15,7 @@ type pgDb struct {
 	sqlSelectContacts *sqlx.Stmt
 	sqlSelectContact *sqlx.Stmt
 	sqlUpdateContact *sqlx.NamedStmt
+	sqlInsertContact *sqlx.NamedStmt
 }
 
 func InitDb(cfg Config) (*pgDb, error) {
@@ -52,8 +53,6 @@ func (p *pgDb) createTablesIfNotExist() error {
 }
 
 func (p *pgDb) prepareSqlStatements() (err error) {
-	if p.sqlSelectContacts, err = p.dbConn.Preparex("SELECT * FROM contacts"); err != nil { return err}
-	if p.sqlSelectContact, err = p.dbConn.Preparex(`SELECT * FROM contacts WHERE id=$1`); err != nil { return err }
-	if p.sqlUpdateContact, err = p.dbConn.PrepareNamed(`UPDATE contacts SET name=:name, email=:email, image=:image WHERE id=:id`); err != nil { return err }
+	if err := p.prepareContactsSqlStatements(); err != nil { return err }
 	return nil
 }

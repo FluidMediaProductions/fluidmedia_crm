@@ -4,6 +4,7 @@ type db interface {
 	SelectContacts() ([]*Contact, error)
 	SelectContact(int) (*Contact, error)
 	UpdateContact(*Contact) error
+	NewContact() (int, error)
 }
 
 type Model struct {

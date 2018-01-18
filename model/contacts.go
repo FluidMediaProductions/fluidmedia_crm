@@ -18,3 +18,7 @@ func (m *Model) Contact(id int) (*Contact, error) {
 func (m *Model) SaveContact(contact *Contact) error {
 	return m.db.UpdateContact(contact)
 }
+
+func (m *Model) NewContact() (int, error) {
+	return m.db.NewContact()
+}

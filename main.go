@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"strconv"
 	"database/sql"
+	"fmt"
 )
 
 type Config struct {
@@ -39,6 +40,8 @@ func handleContacts(m *model.Model, page *Page, w http.ResponseWriter, r *http.R
 	contacts, err := m.Contacts()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		display500(w)
+		return
 	}
 	displayWithContext(w, "contacts", page, &ContactsContext{Contacts: contacts})
 }
@@ -71,6 +74,16 @@ func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *ht
 	}
 }
 
+func handleContactsNew(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+	contactId, err := m.NewContact()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		display500(w)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/contacts/%d", contactId), 302)
+}
+
 func main() {
 	cfg := parseFlags()
 
@@ -97,6 +110,12 @@ func main() {
 			Path: "/contacts/{id:[0-9]+}",
 			Methods: []string{"GET", "POST"},
 			Handler: handleContactsEdit,
+		},
+		{
+			InMenu: false,
+			Path: "/contacts/new",
+			Methods: []string{"GET"},
+			Handler: handleContactsNew,
 		},
 	}
 

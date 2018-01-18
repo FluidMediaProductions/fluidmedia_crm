@@ -7,10 +7,10 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="right">
-                        <button type="button" class="btn btn-lg bg-indigo waves-effect">
+                        <a href="/contacts/new" class="btn btn-lg bg-indigo waves-effect">
                             <i class="material-icons">add</i>
                             <span>ADD NEW</span>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -42,9 +42,9 @@
                                     <td>{{ .Name }}</td>
                                     <td>{{ .Email }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-default btn-circle waves-effect waves-circle">
+                                        <a href="/contacts/{{ .ID }}" class="btn btn-default btn-circle waves-effect waves-circle">
                                             <i class="material-icons">edit</i>
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
                             {{ end }}
