@@ -28,6 +28,12 @@ type pgDb struct {
 	sqlUpdateOrganisation *sqlx.NamedStmt
 	sqlInsertOrganisation *sqlx.NamedStmt
 	sqlDeleteOrganisation *sqlx.Stmt
+
+	sqlSelectUsers *sqlx.Stmt
+	sqlSelectUser *sqlx.Stmt
+	sqlUpdateUser *sqlx.NamedStmt
+	sqlInsertUser *sqlx.NamedStmt
+	sqlDeleteUser *sqlx.Stmt
 }
 
 func InitDb(cfg Config) (*pgDb, error) {
@@ -70,6 +76,7 @@ func (p *pgDb) migrate() error {
 func (p *pgDb) prepareSqlStatements() (err error) {
 	if err := p.prepareContactsSqlStatements(); err != nil { return err }
 	if err := p.prepareOrganisationsSqlStatements(); err != nil { return err }
+	if err := p.prepareUsersSqlStatements(); err != nil { return err }
 	return nil
 }
 

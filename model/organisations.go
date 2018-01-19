@@ -12,7 +12,6 @@ type Organisation struct {
 	Description string
 }
 
-
 func (m *Model) Organisations() ([]*Organisation, error) {
 	return m.db.SelectOrganisations()
 }

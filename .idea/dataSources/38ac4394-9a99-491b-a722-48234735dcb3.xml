@@ -31,8 +31,8 @@
     </role>
     <schema id="7" parent="2" name="public">
       <ObjectId>2200</ObjectId>
-      <IntrospectionTimestamp>2018-01-19.13:33:45.045</IntrospectionTimestamp>
-      <IntrospectionStateNumber>688</IntrospectionStateNumber>
+      <IntrospectionTimestamp>2018-01-19.17:02:04.869</IntrospectionTimestamp>
+      <IntrospectionStateNumber>701</IntrospectionStateNumber>
       <Current>1</Current>
       <Visible>1</Visible>
     </schema>
@@ -51,33 +51,48 @@
     <schema id="12" parent="2" name="information_schema">
       <ObjectId>12153</ObjectId>
     </schema>
-    <sequence id="13" parent="7" name="contacts_id_seq">
+    <sequence id="13" parent="7" name="users_id_seq">
+      <ObjectId>16470</ObjectId>
+      <StateNumber>697</StateNumber>
+      <SequenceIdentity>1</SequenceIdentity>
+      <BelongsToColumn>1</BelongsToColumn>
+      <CacheSize>1</CacheSize>
+    </sequence>
+    <sequence id="14" parent="7" name="contacts_id_seq">
       <ObjectId>16405</ObjectId>
       <StateNumber>622</StateNumber>
       <SequenceIdentity>1</SequenceIdentity>
       <BelongsToColumn>1</BelongsToColumn>
       <CacheSize>1</CacheSize>
     </sequence>
-    <sequence id="14" parent="7" name="organisations_id_seq">
+    <sequence id="15" parent="7" name="organisations_id_seq">
       <ObjectId>16425</ObjectId>
       <StateNumber>673</StateNumber>
       <SequenceIdentity>1</SequenceIdentity>
       <BelongsToColumn>1</BelongsToColumn>
       <CacheSize>1</CacheSize>
     </sequence>
-    <table id="15" parent="7" name="contacts">
+    <table id="16" parent="7" name="contacts">
       <ObjectId>16407</ObjectId>
       <StateNumber>681</StateNumber>
     </table>
-    <table id="16" parent="7" name="organisations">
+    <table id="17" parent="7" name="organisations">
       <ObjectId>16427</ObjectId>
       <StateNumber>681</StateNumber>
     </table>
-    <table id="17" parent="7" name="schema_migrations">
+    <table id="18" parent="7" name="schema_migrations">
       <ObjectId>16436</ObjectId>
-      <StateNumber>682</StateNumber>
+      <StateNumber>701</StateNumber>
     </table>
-    <column id="18" parent="15" name="id">
+    <table id="19" parent="7" name="sessions">
+      <ObjectId>16457</ObjectId>
+      <StateNumber>694</StateNumber>
+    </table>
+    <table id="20" parent="7" name="users">
+      <ObjectId>16472</ObjectId>
+      <StateNumber>700</StateNumber>
+    </table>
+    <column id="21" parent="16" name="id">
       <Position>1</Position>
       <DataType>integer|0</DataType>
       <NotNull>1</NotNull>
@@ -86,28 +101,28 @@
       <TypeId>23</TypeId>
       <SequenceName>contacts_id_seq</SequenceName>
     </column>
-    <column id="19" parent="15" name="name">
+    <column id="22" parent="16" name="name">
       <Position>2</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>622</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="20" parent="15" name="email">
+    <column id="23" parent="16" name="email">
       <Position>3</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>659</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="21" parent="15" name="image">
+    <column id="24" parent="16" name="image">
       <Position>4</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>623</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="22" parent="15" name="state">
+    <column id="25" parent="16" name="state">
       <Position>5</Position>
       <DataType>integer|0</DataType>
       <NotNull>1</NotNull>
@@ -115,49 +130,49 @@
       <DefaultExpression>0</DefaultExpression>
       <TypeId>23</TypeId>
     </column>
-    <column id="23" parent="15" name="phone">
+    <column id="26" parent="16" name="phone">
       <Position>6</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>658</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="24" parent="15" name="mobile">
+    <column id="27" parent="16" name="mobile">
       <Position>7</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>664</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="25" parent="15" name="website">
+    <column id="28" parent="16" name="website">
       <Position>8</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>663</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="26" parent="15" name="twitter">
+    <column id="29" parent="16" name="twitter">
       <Position>9</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>665</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="27" parent="15" name="address">
+    <column id="30" parent="16" name="address">
       <Position>10</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>667</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="28" parent="15" name="description">
+    <column id="31" parent="16" name="description">
       <Position>11</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>669</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="29" parent="15" name="organisation_id">
+    <column id="32" parent="16" name="organisation_id">
       <Position>12</Position>
       <DataType>integer|0</DataType>
       <NotNull>1</NotNull>
@@ -165,18 +180,18 @@
       <DefaultExpression>0</DefaultExpression>
       <TypeId>23</TypeId>
     </column>
-    <index id="30" parent="15" name="contacts_pkey">
+    <index id="33" parent="16" name="contacts_pkey">
       <ObjectId>16414</ObjectId>
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="31" parent="15" name="contacts_pkey">
+    <key id="34" parent="16" name="contacts_pkey">
       <ObjectId>16415</ObjectId>
       <ColNames>id</ColNames>
       <UnderlyingIndexName>contacts_pkey</UnderlyingIndexName>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="32" parent="15" name="contacts_organisation_id_fkey">
+    <foreign-key id="35" parent="16" name="contacts_organisation_id_fkey">
       <ObjectId>16447</ObjectId>
       <ColNames>organisation_id</ColNames>
       <RefTableId>16427</RefTableId>
@@ -185,7 +200,7 @@
       <RefKeyName>organisations_pkey</RefKeyName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="33" parent="16" name="id">
+    <column id="36" parent="17" name="id">
       <Position>1</Position>
       <DataType>integer|0</DataType>
       <NotNull>1</NotNull>
@@ -194,97 +209,214 @@
       <TypeId>23</TypeId>
       <SequenceName>organisations_id_seq</SequenceName>
     </column>
-    <column id="34" parent="16" name="image">
+    <column id="37" parent="17" name="image">
       <Position>2</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>673</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="35" parent="16" name="name">
+    <column id="38" parent="17" name="name">
       <Position>3</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>673</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="36" parent="16" name="email">
+    <column id="39" parent="17" name="email">
       <Position>4</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>673</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="37" parent="16" name="phone">
+    <column id="40" parent="17" name="phone">
       <Position>5</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>673</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="38" parent="16" name="website">
+    <column id="41" parent="17" name="website">
       <Position>6</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>673</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="39" parent="16" name="twitter">
+    <column id="42" parent="17" name="twitter">
       <Position>7</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>673</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="40" parent="16" name="address">
+    <column id="43" parent="17" name="address">
       <Position>8</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>673</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="41" parent="16" name="description">
+    <column id="44" parent="17" name="description">
       <Position>9</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>673</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <index id="42" parent="16" name="organisations_pkey">
+    <index id="45" parent="17" name="organisations_pkey">
       <ObjectId>16434</ObjectId>
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="43" parent="16" name="organisations_pkey">
+    <key id="46" parent="17" name="organisations_pkey">
       <ObjectId>16435</ObjectId>
       <ColNames>id</ColNames>
       <UnderlyingIndexName>organisations_pkey</UnderlyingIndexName>
       <Primary>1</Primary>
     </key>
-    <column id="44" parent="17" name="version">
+    <column id="47" parent="18" name="version">
       <Position>1</Position>
       <DataType>bigint|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>676</StateNumber>
       <TypeId>20</TypeId>
     </column>
-    <column id="45" parent="17" name="dirty">
+    <column id="48" parent="18" name="dirty">
       <Position>2</Position>
       <DataType>boolean|0</DataType>
       <NotNull>1</NotNull>
       <StateNumber>676</StateNumber>
       <TypeId>16</TypeId>
     </column>
-    <index id="46" parent="17" name="schema_migrations_pkey">
+    <index id="49" parent="18" name="schema_migrations_pkey">
       <ObjectId>16439</ObjectId>
       <ColNames>version</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="47" parent="17" name="schema_migrations_pkey">
+    <key id="50" parent="18" name="schema_migrations_pkey">
       <ObjectId>16440</ObjectId>
       <ColNames>version</ColNames>
       <UnderlyingIndexName>schema_migrations_pkey</UnderlyingIndexName>
       <Primary>1</Primary>
+    </key>
+    <column id="51" parent="19" name="token">
+      <Position>1</Position>
+      <DataType>text|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>694</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="52" parent="19" name="data">
+      <Position>2</Position>
+      <DataType>bytea|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>694</StateNumber>
+      <TypeId>17</TypeId>
+    </column>
+    <column id="53" parent="19" name="expiry">
+      <Position>3</Position>
+      <DataType>timestamp with time zone|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>694</StateNumber>
+      <TypeId>1184</TypeId>
+    </column>
+    <index id="54" parent="19" name="sessions_pkey">
+      <ObjectId>16463</ObjectId>
+      <ColNames>token</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="55" parent="19" name="sessions_expiry_idx">
+      <ObjectId>16465</ObjectId>
+      <ColNames>expiry</ColNames>
+    </index>
+    <key id="56" parent="19" name="sessions_pkey">
+      <ObjectId>16464</ObjectId>
+      <ColNames>token</ColNames>
+      <UnderlyingIndexName>sessions_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="57" parent="20" name="id">
+      <Position>1</Position>
+      <DataType>integer|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>697</StateNumber>
+      <DefaultExpression>nextval(&apos;users_id_seq&apos;::regclass)</DefaultExpression>
+      <TypeId>23</TypeId>
+      <SequenceName>users_id_seq</SequenceName>
+    </column>
+    <column id="58" parent="20" name="name">
+      <Position>2</Position>
+      <DataType>text|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>697</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="59" parent="20" name="email">
+      <Position>3</Position>
+      <DataType>text|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>697</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="60" parent="20" name="phone">
+      <Position>4</Position>
+      <DataType>text|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>697</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="61" parent="20" name="isadmin">
+      <Position>5</Position>
+      <DataType>boolean|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>697</StateNumber>
+      <TypeId>16</TypeId>
+    </column>
+    <column id="62" parent="20" name="disabled">
+      <Position>6</Position>
+      <DataType>boolean|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>697</StateNumber>
+      <TypeId>16</TypeId>
+    </column>
+    <column id="63" parent="20" name="login">
+      <Position>7</Position>
+      <DataType>text|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>700</StateNumber>
+      <DefaultExpression>&apos;&apos;::text</DefaultExpression>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="64" parent="20" name="pass">
+      <Position>8</Position>
+      <DataType>text|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>700</StateNumber>
+      <DefaultExpression>&apos;&apos;::text</DefaultExpression>
+      <TypeId>25</TypeId>
+    </column>
+    <index id="65" parent="20" name="users_pkey">
+      <ObjectId>16479</ObjectId>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="66" parent="20" name="users_login_key">
+      <ObjectId>16486</ObjectId>
+      <ColNames>login</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="67" parent="20" name="users_pkey">
+      <ObjectId>16480</ObjectId>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>users_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <key id="68" parent="20" name="users_login_key">
+      <ObjectId>16487</ObjectId>
+      <ColNames>login</ColNames>
+      <UnderlyingIndexName>users_login_key</UnderlyingIndexName>
     </key>
   </database-model>
 </dataSource>

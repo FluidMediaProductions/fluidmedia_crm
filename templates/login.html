@@ -1,0 +1,41 @@
+{{ define "login" }}
+<!DOCTYPE html>
+<html>
+{{ template "partials/head" . }}
+<body class="login-page">
+    <div class="login-box">
+        <div class="logo">
+            <a href="/">{{ .Page.Title }}</a>
+            <small>Fluid Media CRM</small>
+        </div>
+        <div class="card">
+            <div class="body">
+                <form action="" method="POST">
+                    <div class="msg">{{ .Context.Message }}</div>
+                    <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">person</i>
+                            </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">lock</i>
+                            </span>
+                        <div class="form-line">
+                            <input type="password" class="form-control" name="password" placeholder="Password" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button class="btn btn-block bg-pink waves-effect" type="submit">SIGN IN</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{{ template "footer" . }}
+{{ end }}

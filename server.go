@@ -39,6 +39,7 @@ type Page struct {
 	Path string
 	Methods []string
 	Handler PageHandler
+	AdminRequired bool
 }
 
 var pages []*Page
@@ -76,8 +77,21 @@ func displayWithContext(w http.ResponseWriter, tmpl string, page *Page, context 
 func handlerWrapper(handler PageHandler, model *model.Model, page *Page) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session := sessionManager.Load(r)
-		authed, _ := session.GetBool("authed")
-		if authed {
+		userId, err := session.GetInt("userId")
+		if err != nil {
+			http.Redirect(w, r, "/login", 302)
+			return
+		}
+		user, err := model.User(userId)
+		if err != nil {
+			http.Redirect(w, r, "/login", 302)
+			return
+		}
+		if !user.Disabled {
+			if page.AdminRequired && !user.IsAdmin {
+				display404(w)
+				return 
+			}
 			handler(model, page, w, r)
 		} else {
 			http.Redirect(w, r, "/login", 302)
@@ -118,17 +132,53 @@ func staticHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleLogin(model *model.Model) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		type LoginContext struct {
+			Message string
+		}
+		session := sessionManager.Load(r)
+		if r.Method == "GET" {
+			userId, err := session.GetInt("userId")
+			if err == nil {
+				user, err := model.User(userId)
+				if err == nil {
+					if !user.Disabled {
+						http.Redirect(w, r, "/", 302)
+						return
+					}
+				}
+			}
+			displayWithContext(w, "login", &Page{Title: "Login"}, &LoginContext{"Sign in to start your session"})
+		} else if r.Method == "POST" {
+			r.ParseForm()
+			user, valid := model.UserLogin(r.Form.Get("username"), r.Form.Get("password"))
+			if !valid {
+				displayWithContext(w, "login", &Page{Title: "Login"}, &LoginContext{"Login failed"})
+				return
+			}
+			err := session.PutInt(w, "userId", user.ID)
+			if err != nil {
+				display500(w)
+			}
+			log.Printf("User %s successfuly authentiated", user.Login)
+			http.Redirect(w, r, "/", 302)
+		}
+	}
+}
+
 func serveHttp(model *model.Model, pages []*Page, listenSpec string) {
 	sessionManager = scs.NewManager(model.NewSessionStore())
 	sessionManager.Lifetime(time.Hour * 24 * 30)
 	sessionManager.Persist(true)
-	sessionManager.Secure(true)
+	//sessionManager.Secure(true)
 
 	r := mux.NewRouter()
 
 	for _, page := range pages {
 		r.Methods(page.Methods...).Path(page.Path).HandlerFunc(handlerWrapper(page.Handler, model, page))
 	}
+	r.Methods("GET", "POST").Path("/login").HandlerFunc(handleLogin(model))
 
 	r.NotFoundHandler = http.HandlerFunc(handle404)
 

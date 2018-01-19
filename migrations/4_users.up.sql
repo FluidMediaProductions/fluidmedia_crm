@@ -1,0 +1,8 @@
+CREATE TABLE users (
+  ID SERIAL PRIMARY KEY,
+  name TEXT NOT NULL ,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  isAdmin BOOLEAN NOT NULL,
+  disabled BOOLEAN NOT NULL
+)

@@ -8,11 +8,19 @@ type db interface {
 	UpdateContact(*Contact) error
 	NewContact() (int, error)
 	DeleteContact(int) error
+
 	SelectOrganisations() ([]*Organisation, error)
 	SelectOrganisation(int) (*Organisation, error)
 	UpdateOrganisation(*Organisation) error
 	NewOrganisation() (int, error)
 	DeleteOrganisation(int) error
+
+	SelectUsers() ([]*User, error)
+	SelectUser(int) (*User, error)
+	UpdateUser(*User) error
+	NewUser() (int, error)
+	DeleteUser(int) error
+
 	SessionStore() *pgstore.PGStore
 }
 
