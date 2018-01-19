@@ -31,6 +31,7 @@
                                 <th class="fit"></th>
                                 <th>NAME</th>
                                 <th>EMAIL</th>
+                                <th>PHONE</th>
                                 <th class="fit"></th>
                             </tr>
                             </thead>
@@ -43,8 +44,12 @@
                                         </th>
                                         <td>{{ .Name }}</td>
                                         <td>{{ .Email }}</td>
+                                        <td>{{ if .Phone }}{{ .Phone }}{{ end }}{{ if and .Mobile .Phone}}/{{ end }}{{ if .Mobile }}{{ .Mobile }}{{ end }}</td>
                                         <td class="fit">
                                             <div>
+                                                <a href="mailto:{{ .Email }}" class="btn btn-default btn-circle waves-effect waves-circle">
+                                                    <i class="material-icons">email</i>
+                                                </a>
                                                 <a href="/contacts/{{ .ID }}" class="btn btn-default btn-circle waves-effect waves-circle">
                                                     <i class="material-icons">edit</i>
                                                 </a>

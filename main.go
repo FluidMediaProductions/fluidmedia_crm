@@ -74,9 +74,15 @@ func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *ht
 		newContact := &model.Contact{
 			ID: id,
 			Name: r.Form.Get("name"),
-			Email: r.Form.Get("email"),
 			State: state,
 			Image: contact.Image,
+			Email: r.Form.Get("email"),
+			Phone: r.Form.Get("phone"),
+			Mobile: r.Form.Get("mobile"),
+			Website: r.Form.Get("website"),
+			Twitter: r.Form.Get("twitter"),
+			Address: r.Form.Get("address"),
+			Description: r.Form.Get("desc"),
 		}
 		m.SaveContact(newContact)
 		http.Redirect(w, r, "/contacts", 302)

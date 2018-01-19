@@ -4,8 +4,14 @@ type Contact struct {
 	ID int
 	Name string
 	Image string
-	Email string
 	State int
+	Email string
+	Phone string
+	Mobile string
+	Website string
+	Twitter string
+	Address string
+	Description string
 }
 
 var contactStates = map[int][2]string{
