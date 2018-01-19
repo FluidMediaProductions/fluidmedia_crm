@@ -17,7 +17,6 @@ func handleOrganisations(m *model.Model, page *Page, w http.ResponseWriter, r *h
 	organisations, err := m.Organisations()
 	if err != nil {
 		log.Printf("Error getting organisations: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}
@@ -32,12 +31,10 @@ func handleOrganisationsEdit(m *model.Model, page *Page, w http.ResponseWriter, 
 	id, _ := strconv.Atoi(vars["id"])
 	organisation, err := m.Organisation(id)
 	if err == sql.ErrNoRows {
-		w.WriteHeader(http.StatusNotFound)
 		display404(w)
 		return
 	} else if err != nil {
 		log.Printf("Error getting organisation: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}
@@ -65,7 +62,6 @@ func handleOrganisationsNew(m *model.Model, page *Page, w http.ResponseWriter, r
 	organisationId, err := m.NewOrganisation()
 	if err != nil {
 		log.Printf("Error creating new organisation: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}
@@ -78,7 +74,6 @@ func handleOrganisationsDelete(m *model.Model, page *Page, w http.ResponseWriter
 	err := m.DeleteOrganisation(id)
 	if err != nil {
 		log.Printf("Error deleting organisation: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}

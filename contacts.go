@@ -14,40 +14,62 @@ func handleContacts(m *model.Model, page *Page, w http.ResponseWriter, r *http.R
 	type ContactsContext struct {
 		ContactStates map[int][2]string
 		Contacts []*model.Contact
+		Organisations []*model.Organisation
 	}
 	contacts, err := m.Contacts()
 	if err != nil {
 		log.Printf("Error getting contacts: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}
-	displayWithContext(w, "contacts", page, &ContactsContext{Contacts: contacts, ContactStates: m.ContactStates()})
+	organisations, err := m.Organisations()
+	if err != nil {
+		log.Printf("Error getting organisationss: %v", err)
+		display500(w)
+		return
+	}
+	displayWithContext(w, "contacts", page, &ContactsContext{Contacts: contacts, ContactStates: m.ContactStates(),
+		Organisations: organisations})
 }
 
 func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
 	type ContactContext struct {
 		ContactStates map[int][2]string
 		Contact *model.Contact
+		Organisations []*model.Organisation
 	}
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	contact, err := m.Contact(id)
 	if err == sql.ErrNoRows {
-		w.WriteHeader(http.StatusNotFound)
 		display404(w)
 		return
 	} else if err != nil {
 		log.Printf("Error getting contact: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}
 	if r.Method == "GET" {
-		displayWithContext(w, "contacts-edit", page, &ContactContext{Contact: contact, ContactStates: m.ContactStates()})
+		organisations, err := m.Organisations()
+		if err != nil {
+			log.Printf("Error getting organisationss: %v", err)
+			display500(w)
+			return
+		}
+		displayWithContext(w, "contacts-edit", page, &ContactContext{Contact: contact,
+			ContactStates: m.ContactStates(), Organisations: organisations})
 	} else if r.Method == "POST" {
 		r.ParseForm()
-		state, _ := strconv.Atoi(r.Form.Get("state"))
+		state, err := strconv.Atoi(r.Form.Get("state"))
+		if err != nil {
+			display500(w)
+			return
+		}
+		organisation, err := strconv.Atoi(r.Form.Get("organisation"))
+		if err != nil {
+			display500(w)
+			return
+		}
 		newContact := &model.Contact{
 			ID: id,
 			Name: r.Form.Get("name"),
@@ -60,6 +82,7 @@ func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *ht
 			Twitter: r.Form.Get("twitter"),
 			Address: r.Form.Get("address"),
 			Description: r.Form.Get("desc"),
+			OrganisationId: organisation,
 		}
 		m.SaveContact(newContact)
 		http.Redirect(w, r, "/contacts", 302)
@@ -70,7 +93,6 @@ func handleContactsNew(m *model.Model, page *Page, w http.ResponseWriter, r *htt
 	contactId, err := m.NewContact()
 	if err != nil {
 		log.Printf("Error creating new contact: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}
@@ -83,7 +105,6 @@ func handleContactsDelete(m *model.Model, page *Page, w http.ResponseWriter, r *
 	err := m.DeleteContact(id)
 	if err != nil {
 		log.Printf("Error deleting contact: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		display500(w)
 		return
 	}

@@ -6,6 +6,8 @@ import (
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/postgres"
 	_ "github.com/mattes/migrate/source/file"
+	"github.com/alexedwards/scs/stores/pgstore"
+	"time"
 )
 
 type Config struct {
@@ -58,7 +60,9 @@ func (p *pgDb) migrate() error {
 		return err
 	}
 	if err := m.Up(); err != nil {
-		return err
+		if err != migrate.ErrNoChange {
+			return err
+		}
 	}
 	return nil
 }
@@ -67,4 +71,8 @@ func (p *pgDb) prepareSqlStatements() (err error) {
 	if err := p.prepareContactsSqlStatements(); err != nil { return err }
 	if err := p.prepareOrganisationsSqlStatements(); err != nil { return err }
 	return nil
+}
+
+func (p *pgDb) SessionStore() *pgstore.PGStore {
+	return pgstore.New(p.dbConn.DB, time.Minute)
 }

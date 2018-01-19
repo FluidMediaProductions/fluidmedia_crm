@@ -50,14 +50,25 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="header">
-                            <h2>State</h2>
+                            <h2>Details</h2>
                         </div>
                         <div class="body">
+                            <h2 class="card-inside-title">State</h2>
                             <div class="row clearfix">
                                 <div class="form-group">
                                     <select class="form-control show-tick" name="state">
                                     {{ range $id, $name := .Context.ContactStates }}
                                         <option value="{{ $id }}" {{ if eq $id $.Context.Contact.State }}selected{{ end }}>{{ index $name 0 }}</option>
+                                    {{ end }}
+                                    </select>
+                                </div>
+                            </div>
+                            <h2 class="card-inside-title">Organisation</h2>
+                            <div class="row clearfix">
+                                <div class="form-group">
+                                    <select class="form-control show-tick" name="organisation">
+                                    {{ range $org := .Context.Organisations }}
+                                        <option value="{{ $org.ID }}" {{ if eq $org.ID $.Context.Contact.OrganisationId }}selected{{ end }}>{{ $org.Name }}</option>
                                     {{ end }}
                                     </select>
                                 </div>

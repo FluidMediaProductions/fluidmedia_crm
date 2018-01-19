@@ -18,7 +18,7 @@ func parseFlags() *Config {
 	cfg := &Config{}
 
 	flag.StringVar(&cfg.ListenSpec, "listen", "localhost:8080", "HTTP listen spec")
-	flag.StringVar(&cfg.Db.ConnectString, "db-connect", "user=postgres host=127.0.0.1 dbname=fluidmedia_crm", "DB Connect String")
+	flag.StringVar(&cfg.Db.ConnectString, "db-connect", "user=postgres password=Rwbwreia123& host=127.0.0.1 dbname=fluidmedia_crm", "DB Connect String")
 
 	flag.Parse()
 	return cfg

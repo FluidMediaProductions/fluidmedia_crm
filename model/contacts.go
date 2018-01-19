@@ -12,6 +12,8 @@ type Contact struct {
 	Twitter string
 	Address string
 	Description string
+	OrganisationId int `db:"organisation_id"`
+	Organisation *Organisation
 }
 
 var contactStates = map[int][2]string{
@@ -21,7 +23,18 @@ var contactStates = map[int][2]string{
 }
 
 func (m *Model) Contacts() ([]*Contact, error) {
-	return m.db.SelectContacts()
+	contacts, err := m.db.SelectContacts()
+	if err != nil {
+		return nil, err
+	}
+	for _, contact := range contacts {
+		organisation, err := m.Organisation(contact.OrganisationId)
+		if err != nil {
+			organisation = &Organisation{}
+		}
+		contact.Organisation = organisation
+	}
+	return contacts, nil
 }
 
 func (m *Model) Contact(id int) (*Contact, error) {
