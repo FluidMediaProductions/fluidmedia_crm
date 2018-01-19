@@ -3,6 +3,9 @@ package db
 import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	"github.com/mattes/migrate"
+	"github.com/mattes/migrate/database/postgres"
+	_ "github.com/mattes/migrate/source/file"
 )
 
 type Config struct {
@@ -33,7 +36,7 @@ func InitDb(cfg Config) (*pgDb, error) {
 		if err := p.dbConn.Ping(); err != nil {
 			return nil, err
 		}
-		if err := p.createTablesIfNotExist(); err != nil {
+		if err := p.migrate(); err != nil {
 			return nil, err
 		}
 		if err := p.prepareSqlStatements(); err != nil {
@@ -43,9 +46,20 @@ func InitDb(cfg Config) (*pgDb, error) {
 	}
 }
 
-func (p *pgDb) createTablesIfNotExist() error {
-	if err := p.createContactsTablesIfNotExist(); err != nil { return err }
-	if err := p.createOrganisationsTablesIfNotExist(); err != nil { return err }
+func (p *pgDb) migrate() error {
+	driver, err := postgres.WithInstance(p.dbConn.DB, &postgres.Config{})
+	if err != nil {
+		return err
+	}
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://migrations",
+		"postgres", driver)
+	if err != nil {
+		return err
+	}
+	if err := m.Up(); err != nil {
+		return err
+	}
 	return nil
 }
 

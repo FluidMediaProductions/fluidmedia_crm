@@ -2,27 +2,6 @@ package db
 
 import "github.com/fluidmediaproductions/fluidmedia_crm/model"
 
-func (p *pgDb) createOrganisationsTablesIfNotExist() error {
-	createSql := `
-       CREATE TABLE IF NOT EXISTS organisations (
-       id SERIAL NOT NULL PRIMARY KEY,
-       image TEXT NOT NULL,
-       name TEXT NOT NULL,
-       email TEXT NOT NULL,
-       phone TEXT NOT NULL,
-       website TEXT NOT NULL,
-       twitter TEXT NOT NULL,
-       address TEXT NOT NULL,
-       description TEXT NOT NULL);
-    `
-	if rows, err := p.dbConn.Query(createSql); err != nil {
-		return err
-	} else {
-		rows.Close()
-	}
-	return nil
-}
-
 func (p *pgDb) prepareOrganisationsSqlStatements() (err error) {
 	if p.sqlSelectOrganisations, err = p.dbConn.Preparex("SELECT * FROM organisations ORDER BY id"); err != nil { return err}
 	if p.sqlSelectOrganisation, err = p.dbConn.Preparex("SELECT * FROM organisations WHERE id=$1"); err != nil { return err }
