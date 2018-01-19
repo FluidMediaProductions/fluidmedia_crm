@@ -2,7 +2,7 @@ package db
 
 import "github.com/fluidmediaproductions/fluidmedia_crm/model"
 
-func (p *pgDb) createContactTablesIfNotExist() error {
+func (p *pgDb) createContactsTablesIfNotExist() error {
 	createSql := `
        CREATE TABLE IF NOT EXISTS contacts (
        id SERIAL NOT NULL PRIMARY KEY,

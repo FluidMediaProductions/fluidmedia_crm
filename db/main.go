@@ -17,6 +17,12 @@ type pgDb struct {
 	sqlUpdateContact *sqlx.NamedStmt
 	sqlInsertContact *sqlx.NamedStmt
 	sqlDeleteContact *sqlx.Stmt
+
+	sqlSelectOrganisations *sqlx.Stmt
+	sqlSelectOrganisation *sqlx.Stmt
+	sqlUpdateOrganisation *sqlx.NamedStmt
+	sqlInsertOrganisation *sqlx.NamedStmt
+	sqlDeleteOrganisation *sqlx.Stmt
 }
 
 func InitDb(cfg Config) (*pgDb, error) {
@@ -38,11 +44,13 @@ func InitDb(cfg Config) (*pgDb, error) {
 }
 
 func (p *pgDb) createTablesIfNotExist() error {
-	if err := p.createContactTablesIfNotExist(); err != nil { return err }
+	if err := p.createContactsTablesIfNotExist(); err != nil { return err }
+	if err := p.createOrganisationsTablesIfNotExist(); err != nil { return err }
 	return nil
 }
 
 func (p *pgDb) prepareSqlStatements() (err error) {
 	if err := p.prepareContactsSqlStatements(); err != nil { return err }
+	if err := p.prepareOrganisationsSqlStatements(); err != nil { return err }
 	return nil
 }

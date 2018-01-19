@@ -1,4 +1,4 @@
-{{ define "contacts-edit" }}
+{{ define "organisations-edit" }}
 {{ template "header" . }}
 
 <section class="content">
@@ -8,58 +8,32 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="header">
-                            <h2>Profile</h2>
+                            <h2>Organisation</h2>
                         </div>
                         <div class="body">
                             <div class="row clearfix">
                                 <div class="col-sm-2">
-                                    <img src="/static/images/{{ .Context.Contact.Image }}" class="img-circle" style="width: 100%" alt="">
+                                    <img src="/static/images/{{ .Context.Organisation.Image }}" class="img-circle" style="width: 100%" alt="">
                                 </div>
                                 <div class="col-sm-10">
                                     <div class="form-group">
                                         <div class="form-line form-group-lg">
-                                            <input class="form-control" name="name" type="text" value="{{ .Context.Contact.Name }}" required>
+                                            <input class="form-control" name="name" type="text" value="{{ .Context.Organisation.Name }}" required>
                                             <label class="form-label">Name</label>
                                         </div>
                                     </div>
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input class="form-control" name="email" type="email" value="{{ .Context.Contact.Email }}">
+                                            <input class="form-control" name="email" type="email" value="{{ .Context.Organisation.Email }}">
                                             <label class="form-label">Email</label>
                                         </div>
                                     </div>
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input class="form-control" name="phone" type="text" value="{{ .Context.Contact.Phone }}">
+                                            <input class="form-control" name="phone" type="text" value="{{ .Context.Organisation.Phone }}">
                                             <label class="form-label">Phone</label>
                                         </div>
                                     </div>
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input class="form-control" name="mobile" type="text" value="{{ .Context.Contact.Mobile }}">
-                                            <label class="form-label">Mobile</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="card">
-                        <div class="header">
-                            <h2>State</h2>
-                        </div>
-                        <div class="body">
-                            <div class="row clearfix">
-                                <div class="form-group">
-                                    <select class="form-control show-tick" name="state">
-                                    {{ range $id, $name := .Context.ContactStates }}
-                                        <option value="{{ $id }}" {{ if eq $id $.Context.Contact.State }}selected{{ end }}>{{ index $name 0 }}</option>
-                                    {{ end }}
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +52,7 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">@</span>
                                         <div class="form-line">
-                                            <input class="form-control" name="twitter" type="text" value="{{ .Context.Contact.Twitter }}" placeholder="Twitter">
+                                            <input class="form-control" name="twitter" type="text" value="{{ .Context.Organisation.Twitter }}" placeholder="Twitter">
                                         </div>
                                     </div>
                                 </div>
@@ -86,7 +60,7 @@
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="material-icons">web</i></span>
                                         <div class="form-line">
-                                            <input class="form-control" name="website" type="url" value="{{ .Context.Contact.Website }}" placeholder="Website">
+                                            <input class="form-control" name="website" type="url" value="{{ .Context.Organisation.Website }}" placeholder="Website">
                                         </div>
                                     </div>
                                 </div>
@@ -106,7 +80,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <textarea name="address" rows="5" class="form-control no-resize">{{ .Context.Contact.Address }}</textarea>
+                                            <textarea name="address" rows="5" class="form-control no-resize">{{ .Context.Organisation.Address }}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +100,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <textarea name="desc" rows="10" class="form-control no-resize">{{ .Context.Contact.Description }}</textarea>
+                                            <textarea name="desc" rows="10" class="form-control no-resize">{{ .Context.Organisation.Description }}</textarea>
                                         </div>
                                     </div>
                                 </div>
