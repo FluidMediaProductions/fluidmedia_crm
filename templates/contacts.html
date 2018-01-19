@@ -15,12 +15,13 @@
                 </div>
             </div>
         </div>
+        {{ range $id, $name := .Context.ContactStates }}
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header">
                         <h2>
-                            LEADS
+                            {{ index $name 1 }}
                         </h2>
                     </div>
                     <div class="body table-responsive">
@@ -34,24 +35,26 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {{ range .Context.Contacts }}
-                                <tr data-id="{{ .ID }}">
-                                    <th class="fit" scope="row">
-                                        <img src="/static/images/{{ .Image }}" width="48" height="48" alt="" class="img-circle">
-                                    </th>
-                                    <td>{{ .Name }}</td>
-                                    <td>{{ .Email }}</td>
-                                    <td class="fit">
-                                        <div>
-                                            <a href="/contacts/{{ .ID }}" class="btn btn-default btn-circle waves-effect waves-circle">
-                                                <i class="material-icons">edit</i>
-                                            </a>
-                                            <a href="/contacts/del/{{ .ID }}" data-confirm="" class="btn btn-danger btn-circle waves-effect waves-circle">
-                                                <i class="material-icons">delete</i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                            {{ range $.Context.Contacts }}
+                                {{ if eq .State $id }}
+                                    <tr data-id="{{ .ID }}">
+                                        <th class="fit" scope="row">
+                                            <img src="/static/images/{{ .Image }}" width="48" height="48" alt="" class="img-circle">
+                                        </th>
+                                        <td>{{ .Name }}</td>
+                                        <td>{{ .Email }}</td>
+                                        <td class="fit">
+                                            <div>
+                                                <a href="/contacts/{{ .ID }}" class="btn btn-default btn-circle waves-effect waves-circle">
+                                                    <i class="material-icons">edit</i>
+                                                </a>
+                                                <a href="/contacts/del/{{ .ID }}" data-confirm="" class="btn btn-danger btn-circle waves-effect waves-circle">
+                                                    <i class="material-icons">delete</i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {{ end }}
                             {{ end }}
                             </tbody>
                         </table>
@@ -59,6 +62,7 @@
                 </div>
             </div>
         </div>
+        {{ end }}
     </div>
 </section>
 

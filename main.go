@@ -70,10 +70,12 @@ func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *ht
 		displayWithContext(w, "contacts-edit", page, &ContactContext{Contact: contact, ContactStates: m.ContactStates()})
 	} else if r.Method == "POST" {
 		r.ParseForm()
+		state, _ := strconv.Atoi(r.Form.Get("state"))
 		newContact := &model.Contact{
 			ID: id,
 			Name: r.Form.Get("name"),
 			Email: r.Form.Get("email"),
+			State: state,
 			Image: contact.Image,
 		}
 		m.SaveContact(newContact)
