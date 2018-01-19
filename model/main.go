@@ -1,5 +1,7 @@
 package model
 
+import "github.com/alexedwards/scs/stores/pgstore"
+
 type db interface {
 	SelectContacts() ([]*Contact, error)
 	SelectContact(int) (*Contact, error)
@@ -11,6 +13,7 @@ type db interface {
 	UpdateOrganisation(*Organisation) error
 	NewOrganisation() (int, error)
 	DeleteOrganisation(int) error
+	SessionStore() *pgstore.PGStore
 }
 
 type Model struct {
@@ -21,5 +24,9 @@ func New(db db) *Model {
 	return &Model{
 		db: db,
 	}
+}
+
+func (m *Model) NewSessionStore() *pgstore.PGStore {
+	return m.db.SessionStore()
 }
 

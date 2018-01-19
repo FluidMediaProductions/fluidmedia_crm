@@ -9,8 +9,12 @@ import (
 	"path/filepath"
 	"html/template"
 	"os"
+	"github.com/alexedwards/scs"
 	"github.com/fluidmediaproductions/fluidmedia_crm/model"
+	"time"
 )
+
+var sessionManager *scs.Manager
 
 func getTemplate() *template.Template {
 	searchDir := "templates"
@@ -26,13 +30,15 @@ func getTemplate() *template.Template {
 	return template.Must(template.ParseFiles(fileList...))
 }
 
+type PageHandler func(*model.Model, *Page, http.ResponseWriter, *http.Request)
+
 type Page struct {
 	Title string
 	Icon string
 	InMenu bool
 	Path string
 	Methods []string
-	Handler func(*model.Model, *Page, http.ResponseWriter, *http.Request)
+	Handler PageHandler
 }
 
 var pages []*Page
@@ -44,10 +50,12 @@ type TemplateContext struct {
 }
 
 func display404(w http.ResponseWriter) error {
+	w.WriteHeader(http.StatusNotFound)
 	return display(w, "404", &Page{Title: "Not Found"})
 }
 
 func display500(w http.ResponseWriter) error {
+	w.WriteHeader(http.StatusInternalServerError)
 	return display(w, "500", &Page{Title: "Error"})
 }
 
@@ -65,9 +73,15 @@ func displayWithContext(w http.ResponseWriter, tmpl string, page *Page, context 
 }
 
 
-func handlerWrapper(handler func(*model.Model, *Page, http.ResponseWriter, *http.Request), model *model.Model, page *Page) http.HandlerFunc {
+func handlerWrapper(handler PageHandler, model *model.Model, page *Page) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		handler(model, page, w, r)
+		session := sessionManager.Load(r)
+		authed, _ := session.GetBool("authed")
+		if authed {
+			handler(model, page, w, r)
+		} else {
+			http.Redirect(w, r, "/login", 302)
+		}
 	}
 }
 
@@ -100,12 +114,16 @@ func staticHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", contentType)
 		w.Write(data)
 	} else {
-		w.WriteHeader(404)
-		w.Write([]byte("404 O noes - " + http.StatusText(404)))
+		display404(w)
 	}
 }
 
 func serveHttp(model *model.Model, pages []*Page, listenSpec string) {
+	sessionManager = scs.NewManager(model.NewSessionStore())
+	sessionManager.Lifetime(time.Hour * 24 * 30)
+	sessionManager.Persist(true)
+	sessionManager.Secure(true)
+
 	r := mux.NewRouter()
 
 	for _, page := range pages {
@@ -116,8 +134,7 @@ func serveHttp(model *model.Model, pages []*Page, listenSpec string) {
 
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", http.HandlerFunc(staticHandler)))
 
-	http.Handle("/", r)
 
 	log.Println("Listening...")
-	http.ListenAndServe(listenSpec, nil)
+	http.ListenAndServe(listenSpec, sessionManager.Use(r))
 }
