@@ -1,8 +1,8 @@
 FROM scratch
 
-COPY static /
-COPY templates /
-COPY migrations /
+COPY static /static
+COPY templates /templates
+COPY migrations /migrations
 
 COPY fluidmedia_crm /
 
