@@ -1,10 +1,5 @@
 package model
 
-import (
-	"net/url"
-	"log"
-)
-
 type Organisation struct {
 	ID int
 	Name string
