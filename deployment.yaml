@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: crm
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: server
+  namespace: crm
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server
+        image: evilben/fluidmedia_crm
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: crm
+  name: server
+  labels:
+    app: sever
+spec:
+  selector:
+    app: server
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: server
+  namespace: crm
+  labels:
+    app: server
+  annotations:
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+  - hosts:
+    - "crm.fluidmedia.wales"
+    secretName: server-tls
+  rules:
+  - host: "crm.fluidmedia.wales"
+    http:
+      paths:
+      - path: "/"
+        backend:
+          serviceName: server
+          servicePort: 8080
