@@ -84,7 +84,7 @@ func handleContactsEdit(m *model.Model, page *Page, user *model.User, w http.Res
 			Description: r.Form.Get("desc"),
 			OrganisationId: organisation,
 		}
-		err := m.SaveContact(newContact)
+		err = m.SaveContact(newContact)
 		if err != nil {
 			log.Printf("Error updating contact: %v", err)
 			display500(w)

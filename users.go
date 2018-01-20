@@ -51,7 +51,7 @@ func handleUsersEdit(m *model.Model, page *Page, user *model.User, w http.Respon
 			Login: r.Form.Get("login"),
 			Pass: r.Form.Get("pass"),
 		}
-		err := m.SaveUser(newUser)
+		err = m.SaveUser(newUser)
 		if err != nil {
 			log.Printf("Error updating user: %v", err)
 			display500(w)
