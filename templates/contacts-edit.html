@@ -102,6 +102,13 @@
                                     </div>
                                 </div>
                             </div>
+                            {{ if not (eq .Context.Contact.Twitter "") }}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <a class="twitter-timeline" data-height="500" data-theme="light" href="https://twitter.com/{{ .Context.Contact.Twitter }}">Tweets by {{ .Context.Contact.Twitter }}</a>
+                                </div>
+                            </div>
+                            {{ end }}
                         </div>
                     </div>
                 </div>
