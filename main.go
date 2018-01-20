@@ -29,6 +29,7 @@ func parseFlags() *Config {
 		pass = "Rwbwreia123&"
 	}
 	cfg.Db.ConnectString = fmt.Sprintf(cfg.Db.ConnectString, pass)
+	log.Printf("DB Connection string: %s", cfg.Db.ConnectString)
 
 	return cfg
 }
