@@ -53,7 +53,12 @@ func handleOrganisationsEdit(m *model.Model, page *Page, user *model.User, w htt
 			Address: r.Form.Get("address"),
 			Description: r.Form.Get("desc"),
 		}
-		m.SaveOrganisation(newOrganisation)
+		err := m.SaveOrganisation(newOrganisation)
+		if err != nil {
+			log.Printf("Error updating organisation: %v", err)
+			display500(w)
+			return
+		}
 		http.Redirect(w, r, "/organisations", 302)
 	}
 }
