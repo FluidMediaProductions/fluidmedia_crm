@@ -88,7 +88,7 @@ spec:
             secretKeyRef:
               name: postgres-pass
               key: pass
-        args: ["/fluidmedia_crm", "-db-connect", "user=postgres password=$(POSTGRES_PASSWORD) host=postgres dbname=postgres sslmode=disable"]
+        args: ["/fluidmedia_crm", "-db-connect", "user=postgres password=%s host=postgres dbname=postgres sslmode=disable"]
 ---
 apiVersion: v1
 kind: Service
