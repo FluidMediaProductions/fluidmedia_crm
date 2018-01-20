@@ -3,6 +3,66 @@ kind: Namespace
 metadata:
   name: crm
 ---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-pv-claim
+  namespace: crm
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: crm
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
+      containers:
+      - name: postgres
+        image: postgres
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5432
+            protocol: TCP
+      env:
+      - name: POSTGRES_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: postgres-pass
+            key: pass
+      volumeMounts:
+      - name: postgres-data
+        mountPath: /var/lib/postgresql/data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: crm
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -22,6 +82,13 @@ spec:
         ports:
           - containerPort: 8080
             protocol: TCP
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-pass
+              key: pass
+        args: ["-db-connect", "user=postgres password=$(POSTGRES_PASSWORD) host=postgres dbname=postgres"]
 ---
 apiVersion: v1
 kind: Service
@@ -29,7 +96,7 @@ metadata:
   namespace: crm
   name: server
   labels:
-    app: sever
+    app: server
 spec:
   selector:
     app: server
