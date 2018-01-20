@@ -64,6 +64,41 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row clearfix">
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-youtube"></i></span>
+                                            <div class="form-line">
+                                                <input class="form-control" name="youtube" type="text" value="{{ .Context.Organisation.Youtube }}" placeholder="Youtube">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-instagram"></i></span>
+                                            <div class="form-line">
+                                                <input class="form-control" name="instagram" type="text" value="{{ .Context.Organisation.Instagram }}" placeholder="Instagram">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row clearfix">
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-facebook-square"></i></span>
+                                            <div class="form-line">
+                                                <input class="form-control" name="facebook" type="text" value="{{ .Context.Organisation.Facebook }}" placeholder="Facebook">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{ if not (eq .Context.Contact.Twitter "") }}
+                                    <div class="row clearfix">
+                                        <div class="col-sm-6">
+                                            <a class="twitter-timeline" data-height="500" data-theme="light" href="https://twitter.com/{{ .Context.Contact.Twitter }}">Tweets by {{ .Context.Contact.Twitter }}</a>
+                                        </div>
+                                    </div>
+                                {{ end }}
                             </div>
                         </div>
                     </div>

@@ -8,6 +8,9 @@ type Organisation struct {
 	Phone string
 	Website string
 	Twitter string
+	Youtube string
+	Instagram string
+	Facebook string
 	Address string
 	Description string
 }

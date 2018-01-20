@@ -10,6 +10,9 @@ type Contact struct {
 	Mobile string
 	Website string
 	Twitter string
+	Youtube string
+	Instagram string
+	Facebook string
 	Address string
 	Description string
 	OrganisationId int `db:"organisation_id"`

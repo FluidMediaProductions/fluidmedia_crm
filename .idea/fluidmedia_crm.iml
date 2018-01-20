@@ -8,5 +8,7 @@
     <orderEntry type="library" name="popper" level="application" />
     <orderEntry type="library" name="jquery-3.2.1" level="application" />
     <orderEntry type="library" name="widgets" level="application" />
+    <orderEntry type="library" name="all" level="application" />
+    <orderEntry type="library" name="e5e6217479" level="application" />
   </component>
 </module>

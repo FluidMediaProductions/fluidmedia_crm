@@ -50,6 +50,9 @@ func handleOrganisationsEdit(m *model.Model, page *Page, user *model.User, w htt
 			Phone: r.Form.Get("phone"),
 			Website: r.Form.Get("website"),
 			Twitter: r.Form.Get("twitter"),
+			Youtube: r.Form.Get("youtube"),
+			Instagram: r.Form.Get("instagram"),
+			Facebook: r.Form.Get("facebook"),
 			Address: r.Form.Get("address"),
 			Description: r.Form.Get("desc"),
 		}
