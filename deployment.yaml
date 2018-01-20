@@ -38,15 +38,15 @@ spec:
         ports:
           - containerPort: 5432
             protocol: TCP
-      env:
-      - name: POSTGRES_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: postgres-pass
-            key: pass
-      volumeMounts:
-      - name: postgres-data
-        mountPath: /var/lib/postgresql/data
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-pass
+              key: pass
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
 ---
 apiVersion: v1
 kind: Service
