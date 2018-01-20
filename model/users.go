@@ -2,6 +2,7 @@ package model
 
 import (
 	"golang.org/x/crypto/bcrypt"
+	"log"
 )
 
 type User struct {
@@ -25,13 +26,16 @@ func (m *Model) User(id int) (*User, error) {
 
 func (m *Model) SaveUser(user *User) error {
 	if user.Pass != "" {
+		log.Printf("Generating password for user %s", user.Login)
 		pass, err := bcrypt.GenerateFromPassword([]byte(user.Pass), 14)
 		if err != nil {
+			log.Printf("Error generating password for user %s: %v", user.Login, err)
 			return err
 		}
 		user.Pass = string(pass)
 		err = m.db.UpdateUserPass(user)
 		if err != nil {
+			log.Printf("Error updating password for user %s: %v", user.Login, err)
 			return err
 		}
 	}
