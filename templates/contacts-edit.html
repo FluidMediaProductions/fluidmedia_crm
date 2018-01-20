@@ -157,6 +157,16 @@
                                     </div>
                                 </div>
                             </div>
+                            {{ if not (eq .Context.Contact.Address "")}}
+                                <div class="row clearfix">
+                                    <iframe
+                                            width="100%"
+                                            height="450"
+                                            frameborder="0" style="border:0"
+                                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBNPHFjofqE7LCjEEhAxwBSBvrojJdEtNg&q={{ .Context.Contact.Address }}" allowfullscreen>
+                                    </iframe>
+                                </div>
+                            {{ end }}
                         </div>
                     </div>
                 </div>
