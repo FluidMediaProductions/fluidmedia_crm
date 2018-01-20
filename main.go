@@ -6,6 +6,8 @@ import (
 	"github.com/fluidmediaproductions/fluidmedia_crm/db"
 	"flag"
 	"log"
+	"os"
+	"fmt"
 )
 
 type Config struct {
@@ -18,7 +20,13 @@ func parseFlags() *Config {
 	cfg := &Config{}
 
 	flag.StringVar(&cfg.ListenSpec, "listen", "localhost:8080", "HTTP listen spec")
-	flag.StringVar(&cfg.Db.ConnectString, "db-connect", "user=postgres password=Rwbwreia123& host=127.0.0.1 dbname=fluidmedia_crm", "DB Connect String")
+	flag.StringVar(&cfg.Db.ConnectString, "db-connect", "user=postgres password=%s host=127.0.0.1 dbname=fluidmedia_crm", "DB Connect String")
+
+	pass := os.Getenv("POSTGRES_PASSWORD")
+	if pass == "" {
+		pass = "Rwbwreia123&"
+	}
+	cfg.Db.ConnectString = fmt.Sprintf(cfg.Db.ConnectString, pass)
 
 	flag.Parse()
 	return cfg
