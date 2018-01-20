@@ -6,7 +6,8 @@ func (p *pgDb) prepareUsersSqlStatements() (err error) {
 	if p.sqlSelectUsers, err = p.dbConn.Preparex("SELECT * FROM users ORDER BY id"); err != nil { return err}
 	if p.sqlSelectUser, err = p.dbConn.Preparex("SELECT * FROM users WHERE id=$1"); err != nil { return err }
 	if p.sqlUpdateUser, err = p.dbConn.PrepareNamed("UPDATE users SET name=:name, email=:email," +
-		" isAdmin=:isadmin, phone=:phone, disabled=:disabled, login=:login, pass=:pass WHERE id=:id"); err != nil { return err }
+		" isAdmin=:isadmin, phone=:phone, disabled=:disabled, login=:login WHERE id=:id"); err != nil { return err }
+	if p.sqlUpdateUserPass, err = p.dbConn.PrepareNamed("UPDATE users SET pass=:pass WHERE id=:id"); err != nil { return err }
 	if p.sqlInsertUser, err = p.dbConn.PrepareNamed("INSERT INTO users (name, email, isAdmin, phone, disabled, login, pass)" +
 		" VALUES (:name, :email, :isadmin, :phone, :disabled,:login, :pass) RETURNING id"); err != nil { return err }
 	if p.sqlDeleteUser, err = p.dbConn.Preparex("DELETE FROM users WHERE id=$1"); err != nil { return err }
@@ -30,6 +31,11 @@ func (p *pgDb) SelectUser(id int) (*model.User, error){
 }
 
 func (p *pgDb) UpdateUser(user *model.User) error {
+	_, err := p.sqlUpdateUser.Exec(user)
+	return err
+}
+
+func (p *pgDb) UpdateUserPass(user *model.User) error {
 	_, err := p.sqlUpdateUser.Exec(user)
 	return err
 }

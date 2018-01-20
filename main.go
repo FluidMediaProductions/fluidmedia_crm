@@ -24,8 +24,8 @@ func parseFlags() *Config {
 	return cfg
 }
 
-func handleIndex(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
-	display(w, "index", page)
+func handleIndex(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
+	display(w, "index", page, user)
 }
 
 func main() {
@@ -42,7 +42,7 @@ func main() {
 
 		{
 			Title: "Contacts",
-			Icon: "person",
+			Icon: "contacts",
 			InMenu: true,
 			Path: "/contacts",
 			Methods: []string{"GET"},
@@ -95,6 +95,35 @@ func main() {
 			Path: "/organisations/del/{id:[0-9]+}",
 			Methods: []string{"GET"},
 			Handler: handleOrganisationsDelete,
+		},
+
+		{
+			Title: "Users",
+			Icon: "person",
+			InMenu: true,
+			Path: "/users",
+			Methods: []string{"GET"},
+			Handler: handleUsers,
+			AdminRequired: true,
+		},
+		{
+			Title: "Edit user",
+			InMenu: false,
+			Path: "/users/{id:[0-9]+}",
+			Methods: []string{"GET", "POST"},
+			Handler: handleUsersEdit,
+		},
+		{
+			InMenu: false,
+			Path: "/users/new",
+			Methods: []string{"GET"},
+			Handler: handleUsersNew,
+		},
+		{
+			InMenu: false,
+			Path: "/users/del/{id:[0-9]+}",
+			Methods: []string{"GET"},
+			Handler: handleUsersDelete,
 		},
 	}
 

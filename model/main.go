@@ -18,6 +18,7 @@ type db interface {
 	SelectUsers() ([]*User, error)
 	SelectUser(int) (*User, error)
 	UpdateUser(*User) error
+	UpdateUserPass(*User) error
 	NewUser() (int, error)
 	DeleteUser(int) error
 

@@ -24,6 +24,17 @@ func (m *Model) User(id int) (*User, error) {
 }
 
 func (m *Model) SaveUser(user *User) error {
+	if user.Pass != "" {
+		pass, err := bcrypt.GenerateFromPassword([]byte(user.Pass), 14)
+		if err != nil {
+			return err
+		}
+		user.Pass = string(pass)
+		err = m.db.UpdateUserPass(user)
+		if err != nil {
+			return err
+		}
+	}
 	return m.db.UpdateUser(user)
 }
 

@@ -10,7 +10,7 @@ import (
 	"fmt"
 )
 
-func handleContacts(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleContacts(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
 	type ContactsContext struct {
 		ContactStates map[int][2]string
 		Contacts []*model.Contact
@@ -28,11 +28,11 @@ func handleContacts(m *model.Model, page *Page, w http.ResponseWriter, r *http.R
 		display500(w)
 		return
 	}
-	displayWithContext(w, "contacts", page, &ContactsContext{Contacts: contacts, ContactStates: m.ContactStates(),
+	displayWithContext(w, "contacts", page, user, &ContactsContext{Contacts: contacts, ContactStates: m.ContactStates(),
 		Organisations: organisations})
 }
 
-func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleContactsEdit(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
 	type ContactContext struct {
 		ContactStates map[int][2]string
 		Contact *model.Contact
@@ -56,7 +56,7 @@ func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *ht
 			display500(w)
 			return
 		}
-		displayWithContext(w, "contacts-edit", page, &ContactContext{Contact: contact,
+		displayWithContext(w, "contacts-edit", page, user, &ContactContext{Contact: contact,
 			ContactStates: m.ContactStates(), Organisations: organisations})
 	} else if r.Method == "POST" {
 		r.ParseForm()
@@ -89,7 +89,7 @@ func handleContactsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *ht
 	}
 }
 
-func handleContactsNew(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleContactsNew(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
 	contactId, err := m.NewContact()
 	if err != nil {
 		log.Printf("Error creating new contact: %v", err)
@@ -99,7 +99,7 @@ func handleContactsNew(m *model.Model, page *Page, w http.ResponseWriter, r *htt
 	http.Redirect(w, r, fmt.Sprintf("/contacts/%d", contactId), 302)
 }
 
-func handleContactsDelete(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleContactsDelete(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	err := m.DeleteContact(id)

@@ -32,6 +32,7 @@ type pgDb struct {
 	sqlSelectUsers *sqlx.Stmt
 	sqlSelectUser *sqlx.Stmt
 	sqlUpdateUser *sqlx.NamedStmt
+	sqlUpdateUserPass *sqlx.NamedStmt
 	sqlInsertUser *sqlx.NamedStmt
 	sqlDeleteUser *sqlx.Stmt
 }

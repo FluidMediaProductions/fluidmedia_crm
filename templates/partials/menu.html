@@ -3,7 +3,7 @@
     <ul class="list">
         <li class="header">MAIN NAVIGATION</li>
         {{ range .Pages }}
-            {{ if .InMenu }}
+            {{ if (and .InMenu (or (and $.User.IsAdmin .AdminRequired) (not .AdminRequired))) }}
                 <li {{ if (eq .Path $.Page.Path) }}class="active"{{ end }}>
                     <a href="{{ .Path }}">
                         <i class="material-icons">{{ .Icon }}</i>

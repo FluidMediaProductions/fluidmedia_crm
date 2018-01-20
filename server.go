@@ -30,7 +30,7 @@ func getTemplate() *template.Template {
 	return template.Must(template.ParseFiles(fileList...))
 }
 
-type PageHandler func(*model.Model, *Page, http.ResponseWriter, *http.Request)
+type PageHandler func(*model.Model, *Page, *model.User, http.ResponseWriter, *http.Request)
 
 type Page struct {
 	Title string
@@ -46,26 +46,27 @@ var pages []*Page
 
 type TemplateContext struct {
 	Page *Page
+	User *model.User
 	Pages []*Page
 	Context interface{}
 }
 
 func display404(w http.ResponseWriter) error {
 	w.WriteHeader(http.StatusNotFound)
-	return display(w, "404", &Page{Title: "Not Found"})
+	return display(w, "404", &Page{Title: "Not Found"}, nil)
 }
 
 func display500(w http.ResponseWriter) error {
 	w.WriteHeader(http.StatusInternalServerError)
-	return display(w, "500", &Page{Title: "Error"})
+	return display(w, "500", &Page{Title: "Error"}, nil)
 }
 
-func display(w http.ResponseWriter, tmpl string, page *Page) error {
-	return displayWithContext(w, tmpl, page, nil)
+func display(w http.ResponseWriter, tmpl string, page *Page, user *model.User) error {
+	return displayWithContext(w, tmpl, page, user, nil)
 }
 
-func displayWithContext(w http.ResponseWriter, tmpl string, page *Page, context interface{}) error {
-	err := getTemplate().ExecuteTemplate(w, tmpl, &TemplateContext{Page: page, Pages: pages, Context: context})
+func displayWithContext(w http.ResponseWriter, tmpl string, page *Page, user *model.User, context interface{}) error {
+	err := getTemplate().ExecuteTemplate(w, tmpl, &TemplateContext{Page: page, Pages: pages, User: user, Context: context})
 	if err != nil {
 		log.Printf("Error rendering %s: %v", tmpl, err)
 		return err
@@ -90,9 +91,10 @@ func handlerWrapper(handler PageHandler, model *model.Model, page *Page) http.Ha
 		if !user.Disabled {
 			if page.AdminRequired && !user.IsAdmin {
 				display404(w)
-				return 
+				return
 			}
-			handler(model, page, w, r)
+			log.Printf("%s: %s", r.Method, r.URL.Path)
+			handler(model, page, user, w, r)
 		} else {
 			http.Redirect(w, r, "/login", 302)
 		}
@@ -105,7 +107,6 @@ func handle404(w http.ResponseWriter, r *http.Request) {
 
 func staticHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path[1:]
-	log.Println(path)
 	data, err := ioutil.ReadFile("static/" + string(path))
 
 	if err == nil {
@@ -149,12 +150,13 @@ func handleLogin(model *model.Model) http.HandlerFunc {
 					}
 				}
 			}
-			displayWithContext(w, "login", &Page{Title: "Login"}, &LoginContext{"Sign in to start your session"})
+			displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Sign in to start your session"})
 		} else if r.Method == "POST" {
 			r.ParseForm()
 			user, valid := model.UserLogin(r.Form.Get("username"), r.Form.Get("password"))
 			if !valid {
-				displayWithContext(w, "login", &Page{Title: "Login"}, &LoginContext{"Login failed"})
+				log.Printf("User %s failed authentication", r.Form.Get("username"))
+				displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Login failed"})
 				return
 			}
 			err := session.PutInt(w, "userId", user.ID)
@@ -164,6 +166,22 @@ func handleLogin(model *model.Model) http.HandlerFunc {
 			log.Printf("User %s successfuly authentiated", user.Login)
 			http.Redirect(w, r, "/", 302)
 		}
+	}
+}
+
+func handleLogout(model *model.Model) http.HandlerFunc  {
+	return func(w http.ResponseWriter, r *http.Request) {
+		session := sessionManager.Load(r)
+		userId, err := session.GetInt("userId")
+		if err == nil {
+			user, err := model.User(userId)
+			if err == nil {
+				if !user.Disabled {
+					session.Destroy(w)
+				}
+			}
+		}
+		http.Redirect(w, r, "/login", 302)
 	}
 }
 
@@ -179,6 +197,7 @@ func serveHttp(model *model.Model, pages []*Page, listenSpec string) {
 		r.Methods(page.Methods...).Path(page.Path).HandlerFunc(handlerWrapper(page.Handler, model, page))
 	}
 	r.Methods("GET", "POST").Path("/login").HandlerFunc(handleLogin(model))
+	r.Methods("GET").Path("/logout").HandlerFunc(handleLogout(model))
 
 	r.NotFoundHandler = http.HandlerFunc(handle404)
 

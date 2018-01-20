@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-func handleOrganisations(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleOrganisations(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
 	type OrganisationsContext struct {
 		Organisations []*model.Organisation
 	}
@@ -20,10 +20,10 @@ func handleOrganisations(m *model.Model, page *Page, w http.ResponseWriter, r *h
 		display500(w)
 		return
 	}
-	displayWithContext(w, "organisations", page, &OrganisationsContext{Organisations: organisations})
+	displayWithContext(w, "organisations", page, user, &OrganisationsContext{Organisations: organisations})
 }
 
-func handleOrganisationsEdit(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleOrganisationsEdit(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
 	type OrganisationContext struct {
 		Organisation *model.Organisation
 	}
@@ -39,7 +39,7 @@ func handleOrganisationsEdit(m *model.Model, page *Page, w http.ResponseWriter, 
 		return
 	}
 	if r.Method == "GET" {
-		displayWithContext(w, "organisations-edit", page, &OrganisationContext{Organisation: organisation})
+		displayWithContext(w, "organisations-edit", page, user, &OrganisationContext{Organisation: organisation})
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		newOrganisation := &model.Organisation{
@@ -58,7 +58,7 @@ func handleOrganisationsEdit(m *model.Model, page *Page, w http.ResponseWriter, 
 	}
 }
 
-func handleOrganisationsNew(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleOrganisationsNew(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
 	organisationId, err := m.NewOrganisation()
 	if err != nil {
 		log.Printf("Error creating new organisation: %v", err)
@@ -68,7 +68,7 @@ func handleOrganisationsNew(m *model.Model, page *Page, w http.ResponseWriter, r
 	http.Redirect(w, r, fmt.Sprintf("/organisations/%d", organisationId), 302)
 }
 
-func handleOrganisationsDelete(m *model.Model, page *Page, w http.ResponseWriter, r *http.Request) {
+func handleOrganisationsDelete(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	err := m.DeleteOrganisation(id)
