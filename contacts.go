@@ -10,12 +10,15 @@ import (
 	"fmt"
 )
 
+type ContactsContext struct {
+	ContactStates   map[int][2]string
+	ContactedStates map[int]string
+	Contact         *model.Contact
+	Contacts        []*model.Contact
+	Organisations   []*model.Organisation
+}
+
 func handleContacts(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
-	type ContactsContext struct {
-		ContactStates map[int][2]string
-		Contacts []*model.Contact
-		Organisations []*model.Organisation
-	}
 	contacts, err := m.Contacts()
 	if err != nil {
 		log.Printf("Error getting contacts: %v", err)
@@ -29,15 +32,10 @@ func handleContacts(m *model.Model, page *Page, user *model.User, w http.Respons
 		return
 	}
 	displayWithContext(w, "contacts", page, user, &ContactsContext{Contacts: contacts, ContactStates: m.ContactStates(),
-		Organisations: organisations})
+		ContactedStates: m.ContactedStates(), Organisations: organisations})
 }
 
 func handleContactsEdit(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
-	type ContactContext struct {
-		ContactStates map[int][2]string
-		Contact *model.Contact
-		Organisations []*model.Organisation
-	}
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	contact, err := m.Contact(id)
@@ -56,11 +54,16 @@ func handleContactsEdit(m *model.Model, page *Page, user *model.User, w http.Res
 			display500(w)
 			return
 		}
-		displayWithContext(w, "contacts-edit", page, user, &ContactContext{Contact: contact,
-			ContactStates: m.ContactStates(), Organisations: organisations})
+		displayWithContext(w, "contacts-edit", page, user, &ContactsContext{Contact: contact,
+			ContactStates: m.ContactStates(), ContactedStates: m.ContactedStates(), Organisations: organisations})
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		state, err := strconv.Atoi(r.Form.Get("state"))
+		if err != nil {
+			display500(w)
+			return
+		}
+		contactedState, err := strconv.Atoi(r.Form.Get("contacted_state"))
 		if err != nil {
 			display500(w)
 			return
@@ -71,20 +74,21 @@ func handleContactsEdit(m *model.Model, page *Page, user *model.User, w http.Res
 			return
 		}
 		newContact := &model.Contact{
-			ID: id,
-			Name: r.Form.Get("name"),
-			State: state,
-			Image: contact.Image,
-			Email: r.Form.Get("email"),
-			Phone: r.Form.Get("phone"),
-			Mobile: r.Form.Get("mobile"),
-			Website: r.Form.Get("website"),
-			Twitter: r.Form.Get("twitter"),
-			Youtube: r.Form.Get("youtube"),
-			Instagram: r.Form.Get("instagram"),
-			Facebook: r.Form.Get("facebook"),
-			Address: r.Form.Get("address"),
-			Description: r.Form.Get("desc"),
+			ID:             id,
+			Name:           r.Form.Get("name"),
+			State:          state,
+			ContactedState: contactedState,
+			Image:          contact.Image,
+			Email:          r.Form.Get("email"),
+			Phone:          r.Form.Get("phone"),
+			Mobile:         r.Form.Get("mobile"),
+			Website:        r.Form.Get("website"),
+			Twitter:        r.Form.Get("twitter"),
+			Youtube:        r.Form.Get("youtube"),
+			Instagram:      r.Form.Get("instagram"),
+			Facebook:       r.Form.Get("facebook"),
+			Address:        r.Form.Get("address"),
+			Description:    r.Form.Get("desc"),
 			OrganisationId: organisation,
 		}
 		err = m.SaveContact(newContact)

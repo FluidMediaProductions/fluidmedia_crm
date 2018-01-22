@@ -1,17 +1,17 @@
 package model
 
 type Organisation struct {
-	ID int
-	Name string
-	Image string
-	Email string
-	Phone string
-	Website string
-	Twitter string
-	Youtube string
-	Instagram string
-	Facebook string
-	Address string
+	ID          int
+	Name        string
+	Image       string
+	Email       string
+	Phone       string
+	Website     string
+	Twitter     string
+	Youtube     string
+	Instagram   string
+	Facebook    string
+	Address     string
 	Description string
 }
 

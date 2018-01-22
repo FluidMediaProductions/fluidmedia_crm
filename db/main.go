@@ -18,23 +18,23 @@ type pgDb struct {
 	dbConn *sqlx.DB
 
 	sqlSelectContacts *sqlx.Stmt
-	sqlSelectContact *sqlx.Stmt
-	sqlUpdateContact *sqlx.NamedStmt
-	sqlInsertContact *sqlx.NamedStmt
-	sqlDeleteContact *sqlx.Stmt
+	sqlSelectContact  *sqlx.Stmt
+	sqlUpdateContact  *sqlx.NamedStmt
+	sqlInsertContact  *sqlx.NamedStmt
+	sqlDeleteContact  *sqlx.Stmt
 
 	sqlSelectOrganisations *sqlx.Stmt
-	sqlSelectOrganisation *sqlx.Stmt
-	sqlUpdateOrganisation *sqlx.NamedStmt
-	sqlInsertOrganisation *sqlx.NamedStmt
-	sqlDeleteOrganisation *sqlx.Stmt
+	sqlSelectOrganisation  *sqlx.Stmt
+	sqlUpdateOrganisation  *sqlx.NamedStmt
+	sqlInsertOrganisation  *sqlx.NamedStmt
+	sqlDeleteOrganisation  *sqlx.Stmt
 
-	sqlSelectUsers *sqlx.Stmt
-	sqlSelectUser *sqlx.Stmt
-	sqlUpdateUser *sqlx.NamedStmt
+	sqlSelectUsers    *sqlx.Stmt
+	sqlSelectUser     *sqlx.Stmt
+	sqlUpdateUser     *sqlx.NamedStmt
 	sqlUpdateUserPass *sqlx.NamedStmt
-	sqlInsertUser *sqlx.NamedStmt
-	sqlDeleteUser *sqlx.Stmt
+	sqlInsertUser     *sqlx.NamedStmt
+	sqlDeleteUser     *sqlx.Stmt
 }
 
 func InitDb(cfg Config) (*pgDb, error) {
@@ -75,9 +75,15 @@ func (p *pgDb) migrate() error {
 }
 
 func (p *pgDb) prepareSqlStatements() (err error) {
-	if err := p.prepareContactsSqlStatements(); err != nil { return err }
-	if err := p.prepareOrganisationsSqlStatements(); err != nil { return err }
-	if err := p.prepareUsersSqlStatements(); err != nil { return err }
+	if err := p.prepareContactsSqlStatements(); err != nil {
+		return err
+	}
+	if err := p.prepareOrganisationsSqlStatements(); err != nil {
+		return err
+	}
+	if err := p.prepareUsersSqlStatements(); err != nil {
+		return err
+	}
 	return nil
 }
 

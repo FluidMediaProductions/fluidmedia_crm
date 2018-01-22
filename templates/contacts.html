@@ -32,6 +32,7 @@
                                 <th>NAME</th>
                                 <th>EMAIL</th>
                                 <th>PHONE</th>
+                                <th>CONTACTED</th>
                                 <th>ORGANISATION</th>
                                 <th class="fit"></th>
                             </tr>
@@ -46,6 +47,7 @@
                                         <td>{{ .Name }}</td>
                                         <td>{{ .Email }}</td>
                                         <td>{{ .Phone }}{{ if and .Mobile .Phone}}/{{ end }}{{ .Mobile }}</td>
+                                        <td>{{ .ContactedStateName }}</td>
                                         <td>{{ .Organisation.Name }}</td>
                                         <td class="fit">
                                             <div>

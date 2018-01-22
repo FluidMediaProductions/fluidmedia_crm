@@ -1,28 +1,36 @@
 package model
 
 type Contact struct {
-	ID int
-	Name string
-	Image string
-	State int
-	Email string
-	Phone string
-	Mobile string
-	Website string
-	Twitter string
-	Youtube string
-	Instagram string
-	Facebook string
-	Address string
-	Description string
+	ID             int
+	Name           string
+	Image          string
+	State          int
+	ContactedState int `db:"contacted_state"`
+	Email          string
+	Phone          string
+	Mobile         string
+	Website        string
+	Twitter        string
+	Youtube        string
+	Instagram      string
+	Facebook       string
+	Address        string
+	Description    string
 	OrganisationId int `db:"organisation_id"`
-	Organisation *Organisation
+	Organisation   *Organisation
 }
 
 var contactStates = map[int][2]string{
 	0: {"Lead", "Leads"},
 	1: {"Opportunity", "Opportunities"},
 	2: {"Customer", "Customers"},
+}
+
+var contactedStates = map[int]string{
+	0: "Not contacted",
+	1: "Attempted contact",
+	2: "Contacted",
+	3: "Disqualified",
 }
 
 func (m *Model) Contacts() ([]*Contact, error) {
@@ -60,6 +68,14 @@ func (m *Model) ContactStates() map[int][2]string {
 	return contactStates
 }
 
+func (m *Model) ContactedStates() map[int]string {
+	return contactedStates
+}
+
 func (c *Contact) StateName() [2]string {
 	return contactStates[c.State]
+}
+
+func (c *Contact) ContactedStateName() string {
+	return contactedStates[c.ContactedState]
 }

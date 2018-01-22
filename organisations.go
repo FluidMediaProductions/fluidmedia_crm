@@ -43,17 +43,17 @@ func handleOrganisationsEdit(m *model.Model, page *Page, user *model.User, w htt
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		newOrganisation := &model.Organisation{
-			ID: id,
-			Name: r.Form.Get("name"),
-			Image: organisation.Image,
-			Email: r.Form.Get("email"),
-			Phone: r.Form.Get("phone"),
-			Website: r.Form.Get("website"),
-			Twitter: r.Form.Get("twitter"),
-			Youtube: r.Form.Get("youtube"),
-			Instagram: r.Form.Get("instagram"),
-			Facebook: r.Form.Get("facebook"),
-			Address: r.Form.Get("address"),
+			ID:          id,
+			Name:        r.Form.Get("name"),
+			Image:       organisation.Image,
+			Email:       r.Form.Get("email"),
+			Phone:       r.Form.Get("phone"),
+			Website:     r.Form.Get("website"),
+			Twitter:     r.Form.Get("twitter"),
+			Youtube:     r.Form.Get("youtube"),
+			Instagram:   r.Form.Get("instagram"),
+			Facebook:    r.Form.Get("facebook"),
+			Address:     r.Form.Get("address"),
 			Description: r.Form.Get("desc"),
 		}
 		err = m.SaveOrganisation(newOrganisation)

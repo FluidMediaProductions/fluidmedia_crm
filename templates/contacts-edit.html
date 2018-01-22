@@ -63,6 +63,16 @@
                                     </select>
                                 </div>
                             </div>
+                            <h2 class="card-inside-title">Contact State</h2>
+                            <div class="row clearfix">
+                                <div class="form-group">
+                                    <select class="form-control show-tick" name="contacted_state">
+                                    {{ range $id, $name := .Context.ContactedStates }}
+                                        <option value="{{ $id }}" {{ if eq $id $.Context.Contact.ContactedState }}selected{{ end }}>{{ $name }}</option>
+                                    {{ end }}
+                                    </select>
+                                </div>
+                            </div>
                             <h2 class="card-inside-title">Organisation</h2>
                             <div class="row clearfix">
                                 <div class="form-group">

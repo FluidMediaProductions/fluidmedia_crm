@@ -1,0 +1,1 @@
+ALTER TABLE contacts ADD COLUMN contacted_state int NOT NULL DEFAULT 0;
