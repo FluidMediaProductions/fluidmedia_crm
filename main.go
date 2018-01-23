@@ -48,6 +48,20 @@ func main() {
 			Methods: []string{"GET"},
 			Handler: handleIndex,
 		},
+		{
+			Title: "Profile",
+			InMenu: false,
+			Path: "/profile",
+			Methods: []string{"GET", "POST"},
+			Handler: handleProfile,
+		},
+		{
+			Title: "2 Factor Authentication",
+			InMenu: false,
+			Path: "/profile/2fa",
+			Methods: []string{"GET", "POST"},
+			Handler: handleProfile2FA,
+		},
 
 		{
 			Title: "Contacts",

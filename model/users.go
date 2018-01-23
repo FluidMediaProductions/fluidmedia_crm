@@ -6,14 +6,15 @@ import (
 )
 
 type User struct {
-	ID int
-	Name string
-	Login string
-	Pass string
-	Email string
-	Phone string
-	IsAdmin bool
-	Disabled bool
+	ID         int
+	Name       string
+	Login      string
+	Pass       string
+	Email      string
+	Phone      string
+	IsAdmin    bool
+	Disabled   bool
+	TotpSecret string `db:"totp_secret"`
 }
 
 func (m *Model) Users() ([]*User, error) {

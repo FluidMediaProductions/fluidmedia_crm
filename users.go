@@ -29,7 +29,7 @@ func handleUsersEdit(m *model.Model, page *Page, user *model.User, w http.Respon
 	}
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
-	user, err := m.User(id)
+	u, err := m.User(id)
 	if err == sql.ErrNoRows {
 		display404(w)
 		return
@@ -50,6 +50,8 @@ func handleUsersEdit(m *model.Model, page *Page, user *model.User, w http.Respon
 			IsAdmin: r.Form.Get("isadmin") == "checked",
 			Login: r.Form.Get("login"),
 			Pass: r.Form.Get("pass"),
+			Disabled: u.Disabled,
+			TotpSecret: u.TotpSecret,
 		}
 		err = m.SaveUser(newUser)
 		if err != nil {

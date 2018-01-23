@@ -1,0 +1,48 @@
+{{ define "profile2fa" }}
+{{ template "header" . }}
+
+<section class="content">
+    <div class="container-fluid">
+        <form action="" method="post">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>2FA Setup</h2>
+                        </div>
+                        <div class="body">
+                                <div class="row clearfix">
+                                    <div class="col-sm-12 text-center">
+                                        <img src="{{ .Context.QR }}" alt=""><br>
+                                        <strong>Secret: </strong> {{ .Context.Secret }}
+                                        <input type="hidden" name="secret" value="{{ .Context.Secret }}">
+                                    </div>
+                                </div>
+                                <div class="row clearfix text-center">
+                                    <div class="form-group">
+                                        <h2 class="card-inside-title">Please enter a code from your 2FA device to verify</h2>
+                                        <div class="form-line" style="width: 200px;margin: 0 auto;">
+                                            <input class="form-control" type="text" name="verify" maxlength="6" minlength="6">
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 m-b-20">
+                    <div class="right">
+                        <button type="submit" class="btn btn-lg bg-indigo waves-effect">
+                            <i class="material-icons">save</i>
+                            <span>SAVE</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+{{ template "footer" . }}
+{{ end }}
