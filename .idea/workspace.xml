@@ -6,16 +6,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b556c6ff-e81b-498a-9770-6c2e39ac52ba" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/migrations/9_2fa.down.sql" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/migrations/9_2fa.up.sql" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/profile.go" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/templates/profile.html" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/templates/profile2fa.html" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/db/users.go" afterPath="$PROJECT_DIR$/db/users.go" />
-      <change beforePath="$PROJECT_DIR$/main.go" afterPath="$PROJECT_DIR$/main.go" />
-      <change beforePath="$PROJECT_DIR$/model/users.go" afterPath="$PROJECT_DIR$/model/users.go" />
-      <change beforePath="$PROJECT_DIR$/users.go" afterPath="$PROJECT_DIR$/users.go" />
+      <change beforePath="$PROJECT_DIR$/server.go" afterPath="$PROJECT_DIR$/server.go" />
+      <change beforePath="$PROJECT_DIR$/templates/login.html" afterPath="$PROJECT_DIR$/templates/login.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -106,11 +98,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="profile.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="profile.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/profile.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="481">
               <caret line="70" column="37" lean-forward="false" selection-start-line="70" selection-start-column="37" selection-end-line="70" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/login.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="455">
+              <caret line="35" column="109" lean-forward="false" selection-start-line="35" selection-start-column="109" selection-end-line="35" selection-end-column="109" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="server.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/server.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="336">
+              <caret line="166" column="63" lean-forward="false" selection-start-line="166" selection-start-column="63" selection-end-line="166" selection-end-column="63" />
               <folding />
             </state>
           </provider>
@@ -199,12 +211,10 @@
         <option value="$PROJECT_DIR$/migrations/4_users.down.sql" />
         <option value="$PROJECT_DIR$/migrations/5_user_login.down.sql" />
         <option value="$PROJECT_DIR$/migrations/5_user_login.up.sql" />
-        <option value="$PROJECT_DIR$/templates/login.html" />
         <option value="$PROJECT_DIR$/templates/partials/menu.html" />
         <option value="$PROJECT_DIR$/templates/users.html" />
         <option value="$PROJECT_DIR$/templates/partials/top.html" />
         <option value="$PROJECT_DIR$/templates/partials/user.html" />
-        <option value="$PROJECT_DIR$/server.go" />
         <option value="$PROJECT_DIR$/templates/users-edit.html" />
         <option value="$PROJECT_DIR$/model/main.go" />
         <option value="$PROJECT_DIR$/deployment.yaml" />
@@ -237,6 +247,8 @@
         <option value="$PROJECT_DIR$/templates/profile2fa.html" />
         <option value="$PROJECT_DIR$/profile.go" />
         <option value="$PROJECT_DIR$/templates/profile.html" />
+        <option value="$PROJECT_DIR$/server.go" />
+        <option value="$PROJECT_DIR$/templates/login.html" />
       </list>
     </option>
   </component>
@@ -275,6 +287,11 @@
             <path>
               <item name="fluidmedia_crm" type="b2602c69:ProjectViewProjectNode" />
               <item name="fluidmedia_crm" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fluidmedia_crm" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fluidmedia_crm" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -377,13 +394,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="464">
-          <caret line="31" column="45" lean-forward="false" selection-start-line="31" selection-start-column="45" selection-end-line="31" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/partials/menu.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -438,14 +448,6 @@
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
           <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2465">
-          <caret line="157" column="57" lean-forward="false" selection-start-line="157" selection-start-column="57" selection-end-line="157" selection-end-column="57" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -710,16 +712,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/profile2fa.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="41" column="18" lean-forward="true" selection-start-line="41" selection-start-column="18" selection-end-line="41" selection-end-column="18" />
-          <folding>
-            <element signature="e#1236#1272#0#HTML" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/profile.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="566">
@@ -734,6 +726,32 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="481">
           <caret line="70" column="37" lean-forward="false" selection-start-line="70" selection-start-column="37" selection-end-line="70" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="455">
+          <caret line="35" column="109" lean-forward="false" selection-start-line="35" selection-start-column="109" selection-end-line="35" selection-end-column="109" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/profile2fa.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="41" column="18" lean-forward="true" selection-start-line="41" selection-start-column="18" selection-end-line="41" selection-end-column="18" />
+          <folding>
+            <element signature="e#1236#1272#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="166" column="63" lean-forward="false" selection-start-line="166" selection-start-column="63" selection-end-line="166" selection-end-column="63" />
           <folding />
         </state>
       </provider>

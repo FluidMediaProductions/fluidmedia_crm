@@ -12,6 +12,7 @@ import (
 	"github.com/alexedwards/scs"
 	"github.com/fluidmediaproductions/fluidmedia_crm/model"
 	"time"
+	"github.com/pquerna/otp/totp"
 )
 
 var sessionManager *scs.Manager
@@ -158,6 +159,15 @@ func handleLogin(model *model.Model) http.HandlerFunc {
 				log.Printf("User %s failed authentication", r.Form.Get("username"))
 				displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Login failed"})
 				return
+			}
+			if user.TotpSecret != "" {
+				key := r.Form.Get("key")
+				valid := totp.Validate(key, user.TotpSecret)
+				if !valid {
+					log.Printf("User %s failed 2fa", user.Login)
+					displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Login failed"})
+					return
+				}
 			}
 			err := session.PutInt(w, "userId", user.ID)
 			if err != nil {
