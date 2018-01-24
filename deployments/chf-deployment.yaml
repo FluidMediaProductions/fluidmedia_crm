@@ -130,7 +130,7 @@ spec:
     - "crm.chf.uk.com"
     secretName: server-tls
   rules:
-  - host: "crm.crm.uk.com"
+  - host: "crm.chf.uk.com"
     http:
       paths:
       - path: "/"
