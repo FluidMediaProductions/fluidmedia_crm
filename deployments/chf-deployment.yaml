@@ -128,7 +128,7 @@ spec:
   tls:
   - hosts:
     - "crm.chf.uk.com"
-    secretName: server-tls
+    secretName: chf-server-tls
   rules:
   - host: "crm.chf.uk.com"
     http:
