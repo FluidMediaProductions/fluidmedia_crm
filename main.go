@@ -30,6 +30,7 @@ func parseFlags() *Config {
 		pass = "Rwbwreia123&"
 	}
 	cfg.Db.ConnectString = fmt.Sprintf(cfg.Db.ConnectString, pass)
+	log.Printf("Connecting to database: %s", cfg.Db.ConnectString)
 
 	cfg.ClientName = os.Getenv("CLIENT_NAME")
 
