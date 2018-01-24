@@ -68,7 +68,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: server
+  name: chf-server
   namespace: crm
   labels:
     user: chf
@@ -95,7 +95,7 @@ spec:
             secretKeyRef:
               name: chf-postgres-pass
               key: pass
-        args: ["/fluidmedia_crm", "-db-connect", "user=postgres password=%s host=postgres dbname=postgres sslmode=disable"]
+        args: ["/fluidmedia_crm", "-db-connect", "user=postgres password=%s host=chf-postgres dbname=postgres sslmode=disable"]
 ---
 apiVersion: v1
 kind: Service
