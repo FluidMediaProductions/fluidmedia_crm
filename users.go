@@ -17,7 +17,7 @@ func handleUsers(m *model.Model, page *Page, user *model.User, w http.ResponseWr
 	users, err := m.Users()
 	if err != nil {
 		log.Printf("Error getting users: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	displayWithContext(w, "users", page, user, &UsersContext{Users: users})
@@ -35,7 +35,7 @@ func handleUsersEdit(m *model.Model, page *Page, user *model.User, w http.Respon
 		return
 	} else if err != nil {
 		log.Printf("Error getting user: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	if r.Method == "GET" {
@@ -56,7 +56,7 @@ func handleUsersEdit(m *model.Model, page *Page, user *model.User, w http.Respon
 		err = m.SaveUser(newUser)
 		if err != nil {
 			log.Printf("Error updating user: %v", err)
-			display500(w)
+			display500(w, err)
 			return
 		}
 		http.Redirect(w, r, "/users", 302)
@@ -67,7 +67,7 @@ func handleUsersNew(m *model.Model, page *Page, user *model.User, w http.Respons
 	userId, err := m.NewUser()
 	if err != nil {
 		log.Printf("Error creating new user: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/users/%d", userId), 302)
@@ -79,7 +79,7 @@ func handleUsersDelete(m *model.Model, page *Page, user *model.User, w http.Resp
 	err := m.DeleteUser(id)
 	if err != nil {
 		log.Printf("Error deleting user: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	http.Redirect(w, r, "/users", 302)

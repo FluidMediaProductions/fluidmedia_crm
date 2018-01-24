@@ -27,7 +27,7 @@ func handleSearch(m *model.Model, page *Page, user *model.User, w http.ResponseW
 
 	contacts, err := m.SearchContacts(term)
 	if err != nil && err != sql.ErrNoRows {
-		display500(w)
+		display500(w, err)
 		return
 	}
 	for _, contact := range contacts {
@@ -45,7 +45,7 @@ func handleSearch(m *model.Model, page *Page, user *model.User, w http.ResponseW
 
 	organisations, err := m.SearchOrganisations(term)
 	if err != nil && err != sql.ErrNoRows {
-		display500(w)
+		display500(w, err)
 		return
 	}
 	for _, organisation := range organisations {

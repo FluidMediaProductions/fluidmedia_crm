@@ -17,7 +17,7 @@ func handleOrganisations(m *model.Model, page *Page, user *model.User, w http.Re
 	organisations, err := m.Organisations()
 	if err != nil {
 		log.Printf("Error getting organisations: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	displayWithContext(w, "organisations", page, user, &OrganisationsContext{Organisations: organisations})
@@ -35,7 +35,7 @@ func handleOrganisationsEdit(m *model.Model, page *Page, user *model.User, w htt
 		return
 	} else if err != nil {
 		log.Printf("Error getting organisation: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	if r.Method == "GET" {
@@ -59,7 +59,7 @@ func handleOrganisationsEdit(m *model.Model, page *Page, user *model.User, w htt
 		err = m.SaveOrganisation(newOrganisation)
 		if err != nil {
 			log.Printf("Error updating organisation: %v", err)
-			display500(w)
+			display500(w, err)
 			return
 		}
 		http.Redirect(w, r, "/organisations", 302)
@@ -70,7 +70,7 @@ func handleOrganisationsNew(m *model.Model, page *Page, user *model.User, w http
 	organisationId, err := m.NewOrganisation()
 	if err != nil {
 		log.Printf("Error creating new organisation: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/organisations/%d", organisationId), 302)
@@ -82,7 +82,7 @@ func handleOrganisationsDelete(m *model.Model, page *Page, user *model.User, w h
 	err := m.DeleteOrganisation(id)
 	if err != nil {
 		log.Printf("Error deleting organisation: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	http.Redirect(w, r, "/organisations", 302)
