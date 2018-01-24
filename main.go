@@ -12,6 +12,7 @@ import (
 
 type Config struct {
 	ListenSpec string
+	ClientName string
 
 	Db db.Config
 }
@@ -29,6 +30,8 @@ func parseFlags() *Config {
 		pass = "Rwbwreia123&"
 	}
 	cfg.Db.ConnectString = fmt.Sprintf(cfg.Db.ConnectString, pass)
+
+	cfg.ClientName = os.Getenv("CLIENT_NAME")
 
 	return cfg
 }
@@ -157,5 +160,5 @@ func main() {
 
 	modelInst := model.New(dbInst)
 
-	serveHttp(modelInst, pages, cfg.ListenSpec)
+	serveHttp(modelInst, pages, cfg)
 }

@@ -17,6 +17,11 @@ import (
 
 var sessionManager *scs.Manager
 
+var config struct{
+	model *model.Model
+	clientName string
+}
+
 func getTemplate() *template.Template {
 	searchDir := "templates"
 
@@ -50,6 +55,7 @@ type TemplateContext struct {
 	User *model.User
 	Pages []*Page
 	Context interface{}
+	ClientName string
 }
 
 func display404(w http.ResponseWriter) error {
@@ -57,9 +63,9 @@ func display404(w http.ResponseWriter) error {
 	return display(w, "404", &Page{Title: "Not Found"}, nil)
 }
 
-func display500(w http.ResponseWriter) error {
+func display500(w http.ResponseWriter, err error) error {
 	w.WriteHeader(http.StatusInternalServerError)
-	return display(w, "500", &Page{Title: "Error"}, nil)
+	return displayWithContext(w, "500", &Page{Title: "Error"}, nil, err)
 }
 
 func display(w http.ResponseWriter, tmpl string, page *Page, user *model.User) error {
@@ -67,7 +73,7 @@ func display(w http.ResponseWriter, tmpl string, page *Page, user *model.User) e
 }
 
 func displayWithContext(w http.ResponseWriter, tmpl string, page *Page, user *model.User, context interface{}) error {
-	err := getTemplate().ExecuteTemplate(w, tmpl, &TemplateContext{Page: page, Pages: pages, User: user, Context: context})
+	err := getTemplate().ExecuteTemplate(w, tmpl, &TemplateContext{Page: page, Pages: pages, User: user, Context: context, ClientName: config.clientName})
 	if err != nil {
 		log.Printf("Error rendering %s: %v", tmpl, err)
 		return err
@@ -76,7 +82,7 @@ func displayWithContext(w http.ResponseWriter, tmpl string, page *Page, user *mo
 }
 
 
-func handlerWrapper(handler PageHandler, model *model.Model, page *Page) http.HandlerFunc {
+func handlerWrapper(handler PageHandler, page *Page,) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session := sessionManager.Load(r)
 		userId, err := session.GetInt("userId")
@@ -84,7 +90,7 @@ func handlerWrapper(handler PageHandler, model *model.Model, page *Page) http.Ha
 			http.Redirect(w, r, "/login", 302)
 			return
 		}
-		user, err := model.User(userId)
+		user, err := config.model.User(userId)
 		if err != nil {
 			http.Redirect(w, r, "/login", 302)
 			return
@@ -95,7 +101,7 @@ func handlerWrapper(handler PageHandler, model *model.Model, page *Page) http.Ha
 				return
 			}
 			log.Printf("%s: %s", r.Method, r.URL.Path)
-			handler(model, page, user, w, r)
+			handler(config.model, page, user, w, r)
 		} else {
 			http.Redirect(w, r, "/login", 302)
 		}
@@ -134,80 +140,80 @@ func staticHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleLogin(model *model.Model) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		type LoginContext struct {
-			Message string
-		}
-		session := sessionManager.Load(r)
-		if r.Method == "GET" {
-			userId, err := session.GetInt("userId")
+func handleLogin(w http.ResponseWriter, r *http.Request) {
+	type LoginContext struct {
+		Message string
+	}
+	session := sessionManager.Load(r)
+	if r.Method == "GET" {
+		userId, err := session.GetInt("userId")
+		if err == nil {
+			user, err := config.model.User(userId)
 			if err == nil {
-				user, err := model.User(userId)
-				if err == nil {
-					if !user.Disabled {
-						http.Redirect(w, r, "/", 302)
-						return
-					}
-				}
-			}
-			displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Sign in to start your session"})
-		} else if r.Method == "POST" {
-			r.ParseForm()
-			user, valid := model.UserLogin(r.Form.Get("username"), r.Form.Get("password"))
-			if !valid {
-				log.Printf("User %s failed authentication", r.Form.Get("username"))
-				displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Login failed"})
-				return
-			}
-			if user.TotpSecret != "" {
-				key := r.Form.Get("key")
-				valid := totp.Validate(key, user.TotpSecret)
-				if !valid {
-					log.Printf("User %s failed 2fa", user.Login)
-					displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Login failed"})
+				if !user.Disabled {
+					http.Redirect(w, r, "/", 302)
 					return
 				}
 			}
-			err := session.PutInt(w, "userId", user.ID)
-			if err != nil {
-				display500(w)
-			}
-			log.Printf("User %s successfuly authentiated", user.Login)
-			http.Redirect(w, r, "/", 302)
 		}
+		displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Sign in to start your session"})
+	} else if r.Method == "POST" {
+		r.ParseForm()
+		user, valid := config.model.UserLogin(r.Form.Get("username"), r.Form.Get("password"))
+		if !valid {
+			log.Printf("User %s failed authentication", r.Form.Get("username"))
+			displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Login failed"})
+			return
+		}
+		if user.TotpSecret != "" {
+			key := r.Form.Get("key")
+			valid := totp.Validate(key, user.TotpSecret)
+			if !valid {
+				log.Printf("User %s failed 2fa", user.Login)
+				displayWithContext(w, "login", &Page{Title: "Login"}, nil, &LoginContext{"Login failed"})
+				return
+			}
+		}
+		err := session.PutInt(w, "userId", user.ID)
+		if err != nil {
+			display500(w, err)
+		}
+		log.Printf("User %s successfuly authentiated", user.Login)
+		http.Redirect(w, r, "/", 302)
 	}
 }
 
-func handleLogout(model *model.Model) http.HandlerFunc  {
-	return func(w http.ResponseWriter, r *http.Request) {
-		session := sessionManager.Load(r)
-		userId, err := session.GetInt("userId")
+func handleLogout(w http.ResponseWriter, r *http.Request) {
+	session := sessionManager.Load(r)
+	userId, err := session.GetInt("userId")
+	if err == nil {
+		user, err := config.model.User(userId)
 		if err == nil {
-			user, err := model.User(userId)
-			if err == nil {
-				if !user.Disabled {
-					session.Destroy(w)
-				}
+			if !user.Disabled {
+				session.Destroy(w)
 			}
 		}
-		http.Redirect(w, r, "/login", 302)
 	}
+	http.Redirect(w, r, "/login", 302)
 }
 
-func serveHttp(model *model.Model, pages []*Page, listenSpec string) {
+
+func serveHttp(model *model.Model, pages []*Page, cfg *Config) {
 	sessionManager = scs.NewManager(model.NewSessionStore())
 	sessionManager.Lifetime(time.Hour * 24 * 30)
 	sessionManager.Persist(true)
 	//sessionManager.Secure(true)
 
+	config.model = model
+	config.clientName = cfg.ClientName
+
 	r := mux.NewRouter()
 
 	for _, page := range pages {
-		r.Methods(page.Methods...).Path(page.Path).HandlerFunc(handlerWrapper(page.Handler, model, page))
+		r.Methods(page.Methods...).Path(page.Path).HandlerFunc(handlerWrapper(page.Handler, page))
 	}
-	r.Methods("GET", "POST").Path("/login").HandlerFunc(handleLogin(model))
-	r.Methods("GET").Path("/logout").HandlerFunc(handleLogout(model))
+	r.Methods("GET", "POST").Path("/login").HandlerFunc(handleLogin)
+	r.Methods("GET").Path("/logout").HandlerFunc(handleLogout)
 
 	r.NotFoundHandler = http.HandlerFunc(handle404)
 
@@ -215,5 +221,5 @@ func serveHttp(model *model.Model, pages []*Page, listenSpec string) {
 
 
 	log.Println("Listening...")
-	http.ListenAndServe(listenSpec, sessionManager.Use(r))
+	http.ListenAndServe(cfg.ListenSpec, sessionManager.Use(r))
 }

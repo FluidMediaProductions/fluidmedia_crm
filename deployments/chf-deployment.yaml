@@ -1,15 +1,10 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: crm
----
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: postgres-pv-claim
+  name: chf-postgres-pv-claim
   namespace: crm
   labels:
-    user: fluid
+    user: chf
 spec:
   accessModes:
   - ReadWriteOnce
@@ -20,22 +15,22 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: postgres
+  name: chf-postgres
   namespace: crm
   labels:
-    user: fluid
+    user: chf
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: postgres
-        user: fluid
+        user: chf
     spec:
       volumes:
       - name: postgres-data
         persistentVolumeClaim:
-          claimName: postgres-pv-claim
+          claimName: chf-postgres-pv-claim
       containers:
       - name: postgres
         image: postgres
@@ -47,7 +42,7 @@ spec:
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: postgres-pass
+              name: chf-postgres-pass
               key: pass
         volumeMounts:
         - name: postgres-data
@@ -57,14 +52,14 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: crm
-  name: postgres
+  name: chf-postgres
   labels:
     app: postgres
-    user: fluid
+    user: chf
 spec:
   selector:
     app: postgres
-    user: fluid
+    user: chf
   ports:
   - port: 5432
     protocol: TCP
@@ -76,14 +71,14 @@ metadata:
   name: server
   namespace: crm
   labels:
-    user: fluid
+    user: chf
 spec:
   replicas: 3
   template:
     metadata:
       labels:
         app: server
-        user: fluid
+        user: chf
     spec:
       containers:
       - name: server
@@ -93,10 +88,12 @@ spec:
           - containerPort: 8080
             protocol: TCP
         env:
+        - name: CLIENT_NAME
+          value: "CHF"
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: postgres-pass
+              name: chf-postgres-pass
               key: pass
         args: ["/fluidmedia_crm", "-db-connect", "user=postgres password=%s host=postgres dbname=postgres sslmode=disable"]
 ---
@@ -104,14 +101,14 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: crm
-  name: server
+  name: chf-server
   labels:
     app: server
-    user: fluid
+    user: chf
 spec:
   selector:
     app: server
-    user: fluid
+    user: chf
   ports:
   - port: 8080
     protocol: TCP
@@ -120,23 +117,23 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: server
+  name: chf-server
   namespace: crm
   labels:
     app: server
-    user: fluid
+    user: chf
   annotations:
     kubernetes.io/tls-acme: "true"
 spec:
   tls:
   - hosts:
-    - "crm.fluidmedia.wales"
+    - "crm.chf.uk.com"
     secretName: server-tls
   rules:
-  - host: "crm.fluidmedia.wales"
+  - host: "crm.crm.uk.com"
     http:
       paths:
       - path: "/"
         backend:
-          serviceName: server
+          serviceName: chf-server
           servicePort: 8080
