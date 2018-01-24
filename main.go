@@ -52,6 +52,13 @@ func main() {
 			Handler: handleIndex,
 		},
 		{
+			Title: "Search",
+			InMenu: false,
+			Path: "/search",
+			Methods: []string{"GET"},
+			Handler: handleSearch,
+		},
+		{
 			Title: "Profile",
 			InMenu: false,
 			Path: "/profile",

@@ -1,0 +1,50 @@
+{{ define "search" }}
+{{ template "header" . }}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Results for {{ .Context.Term }}
+                        </h2>
+                    </div>
+                    <div class="body table-responsive">
+                        <table class="table table-hover vert-align">
+                            <thead>
+                            <tr>
+                                <th class="fit"></th>
+                                <th>NAME</th>
+                                <th>TYPE</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{ range .Context.Results }}
+                                <tr data-id="{{ .Obj.ID }}">
+                                    <th class="fit" scope="row">
+                                        <img src="/static/images/{{ .Obj.Image }}" width="48" height="48" alt="" class="img-circle">
+                                    </th>
+                                    <td>{{ .Obj.Name }}</td>
+                                    <td>{{ .Type.Name }}</td>
+                                    <td class="fit">
+                                        <div>
+                                            <a href="/{{ .Type.URL }}/{{ .Obj.ID }}" class="btn btn-default btn-circle waves-effect waves-circle">
+                                                <i class="material-icons">edit</i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{ template "footer" . }}
+{{ end }}

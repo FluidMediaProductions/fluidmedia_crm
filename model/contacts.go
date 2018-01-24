@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/renstrom/fuzzysearch/fuzzy"
+	"strings"
+)
+
 type Contact struct {
 	ID             int
 	Name           string
@@ -71,6 +76,34 @@ func (m *Model) ContactStates() map[int][2]string {
 func (m *Model) ContactedStates() map[int]string {
 	return contactedStates
 }
+
+
+func (m *Model) SearchContacts(search string) ([]*Contact, error) {
+	search = strings.ToLower(search)
+	contacts, err := m.Contacts()
+	foundContacts := make([]*Contact, 0)
+	if err != nil {
+		return nil, err
+	}
+	for _, contact := range contacts {
+		match := false
+		if fuzzy.Match(search, strings.ToLower(contact.Name)) { match = true }
+		if fuzzy.Match(search, strings.ToLower(contact.Email)) { match = true }
+		if fuzzy.Match(search, strings.ToLower(contact.Phone)) { match = true }
+		if fuzzy.Match(search, strings.ToLower(contact.Mobile)) { match = true }
+		if fuzzy.Match(search, strings.ToLower(contact.Website)) { match = true }
+		if fuzzy.Match(search, strings.ToLower(contact.Twitter)) { match = true }
+		if fuzzy.Match(search, strings.ToLower(contact.Facebook)) { match = true }
+		if fuzzy.Match(search, strings.ToLower(contact.Instagram)) { match = true }
+		if fuzzy.Match(search, strings.ToLower(contact.Youtube)) { match = true }
+		if fuzzy.Match(search, strings.ToLower(contact.Address)) { match = true }
+		if match {
+			foundContacts = append(foundContacts, contact)
+		}
+	}
+	return foundContacts, nil
+}
+
 
 func (c *Contact) StateName() [2]string {
 	return contactStates[c.State]

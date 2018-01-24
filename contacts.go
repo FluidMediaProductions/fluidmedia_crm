@@ -60,18 +60,15 @@ func handleContactsEdit(m *model.Model, page *Page, user *model.User, w http.Res
 		r.ParseForm()
 		state, err := strconv.Atoi(r.Form.Get("state"))
 		if err != nil {
-			display500(w)
-			return
+			state = 1
 		}
 		contactedState, err := strconv.Atoi(r.Form.Get("contacted_state"))
 		if err != nil {
-			display500(w)
-			return
+			contactedState = 1
 		}
 		organisation, err := strconv.Atoi(r.Form.Get("organisation"))
 		if err != nil {
-			display500(w)
-			return
+			organisation = 0
 		}
 		newContact := &model.Contact{
 			ID:             id,
