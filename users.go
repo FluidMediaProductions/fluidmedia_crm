@@ -39,7 +39,7 @@ func handleUsersEdit(m *model.Model, page *Page, user *model.User, w http.Respon
 		return
 	}
 	if r.Method == "GET" {
-		displayWithContext(w, "users-edit", page, user, &UserContext{User: user})
+		displayWithContext(w, "users-edit", page, user, &UserContext{User: u})
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		newUser := &model.User{
@@ -48,7 +48,7 @@ func handleUsersEdit(m *model.Model, page *Page, user *model.User, w http.Respon
 			Email: r.Form.Get("email"),
 			Phone: r.Form.Get("phone"),
 			IsAdmin: r.Form.Get("isadmin") == "checked",
-			Login: r.Form.Get("login"),
+			Login: r.Form.Get("logsin"),
 			Pass: r.Form.Get("pass"),
 			Disabled: u.Disabled,
 			TotpSecret: u.TotpSecret,
