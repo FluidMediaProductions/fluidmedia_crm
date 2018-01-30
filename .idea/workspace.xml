@@ -7,14 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b556c6ff-e81b-498a-9770-6c2e39ac52ba" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/files.go" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/contacts.go" afterPath="$PROJECT_DIR$/contacts.go" />
-      <change beforePath="$PROJECT_DIR$/server.go" afterPath="$PROJECT_DIR$/server.go" />
-      <change beforePath="$PROJECT_DIR$/templates/contacts-edit.html" afterPath="$PROJECT_DIR$/templates/contacts-edit.html" />
-      <change beforePath="$PROJECT_DIR$/templates/contacts.html" afterPath="$PROJECT_DIR$/templates/contacts.html" />
-      <change beforePath="$PROJECT_DIR$/templates/partials/footer.html" afterPath="$PROJECT_DIR$/templates/partials/footer.html" />
-      <change beforePath="$PROJECT_DIR$/users.go" afterPath="$PROJECT_DIR$/users.go" />
+      <change beforePath="$PROJECT_DIR$/deployment.yaml" afterPath="$PROJECT_DIR$/deployment.yaml" />
+      <change beforePath="$PROJECT_DIR$/deployments/chf-deployment.yaml" afterPath="$PROJECT_DIR$/deployments/chf-deployment.yaml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -105,16 +99,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/login.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="36" lean-forward="false" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="users.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/users.go">
           <provider selected="true" editor-type-id="text-editor">
@@ -135,11 +119,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="contacts.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="contacts.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/contacts.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="351">
               <caret line="44" column="60" lean-forward="false" selection-start-line="44" selection-start-column="60" selection-end-line="44" selection-end-column="60" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="deployment.yaml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/deployment.yaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="449">
+              <caret line="117" column="23" lean-forward="true" selection-start-line="117" selection-start-column="23" selection-end-line="120" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="chf-deployment.yaml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/deployments/chf-deployment.yaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="471">
+              <caret line="103" column="26" lean-forward="false" selection-start-line="103" selection-start-column="26" selection-end-line="103" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -184,16 +188,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="566">
               <caret line="227" column="31" lean-forward="true" selection-start-line="227" selection-start-column="31" selection-end-line="227" selection-end-column="31" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="chf-deployment.yaml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/deployments/chf-deployment.yaml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2210">
-              <caret line="130" column="20" lean-forward="false" selection-start-line="130" selection-start-column="20" selection-end-line="130" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -273,12 +267,10 @@
         <option value="$PROJECT_DIR$/templates/profile.html" />
         <option value="$PROJECT_DIR$/templates/partials/user.html" />
         <option value="$PROJECT_DIR$/templates/partials/top.html" />
-        <option value="$PROJECT_DIR$/deployment.yaml" />
         <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/search.go" />
         <option value="$PROJECT_DIR$/profile.go" />
         <option value="$PROJECT_DIR$/organisations.go" />
-        <option value="$PROJECT_DIR$/deployments/chf-deployment.yaml" />
         <option value="$PROJECT_DIR$/templates/partials/head.html" />
         <option value="$PROJECT_DIR$/templates/login.html" />
         <option value="$PROJECT_DIR$/templates/404.html" />
@@ -290,6 +282,8 @@
         <option value="$PROJECT_DIR$/server.go" />
         <option value="$PROJECT_DIR$/templates/contacts-edit.html" />
         <option value="$PROJECT_DIR$/templates/contacts.html" />
+        <option value="$PROJECT_DIR$/deployment.yaml" />
+        <option value="$PROJECT_DIR$/deployments/chf-deployment.yaml" />
       </list>
     </option>
   </component>
@@ -334,11 +328,6 @@
               <item name="fluidmedia_crm" type="b2602c69:ProjectViewProjectNode" />
               <item name="fluidmedia_crm" type="462c0819:PsiDirectoryNode" />
               <item name="deployments" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="fluidmedia_crm" type="b2602c69:ProjectViewProjectNode" />
-              <item name="fluidmedia_crm" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -654,14 +643,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/deployment.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1632">
-          <caret line="96" column="29" lean-forward="false" selection-start-line="96" selection-start-column="29" selection-end-line="96" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/search.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
@@ -687,14 +668,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
           <caret line="28" column="41" lean-forward="false" selection-start-line="28" selection-start-column="41" selection-end-line="28" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/deployments/chf-deployment.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2210">
-          <caret line="130" column="20" lean-forward="false" selection-start-line="130" selection-start-column="20" selection-end-line="130" selection-end-column="20" />
           <folding />
         </state>
       </provider>
@@ -804,6 +777,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="351">
           <caret line="44" column="60" lean-forward="false" selection-start-line="44" selection-start-column="60" selection-end-line="44" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deployment.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="449">
+          <caret line="117" column="23" lean-forward="true" selection-start-line="117" selection-start-column="23" selection-end-line="120" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deployments/chf-deployment.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="103" column="26" lean-forward="false" selection-start-line="103" selection-start-column="26" selection-end-line="103" selection-end-column="26" />
           <folding />
         </state>
       </provider>

@@ -80,6 +80,10 @@ spec:
         app: server
         user: chf
     spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-pv-claim
       containers:
       - name: server
         image: evilben/fluidmedia_crm:latest
@@ -95,6 +99,9 @@ spec:
             secretKeyRef:
               name: chf-postgres-pass
               key: pass
+        volumeMounts:
+        - name: data
+          mountPath: /data
         args: ["/fluidmedia_crm", "-db-connect", "user=postgres password=%s host=chf-postgres dbname=postgres sslmode=disable"]
 ---
 apiVersion: v1

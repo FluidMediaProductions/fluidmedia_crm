@@ -17,6 +17,18 @@ spec:
     requests:
       storage: 5Gi
 ---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: data-pv-claim
+  namespace: crm
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -85,6 +97,10 @@ spec:
         app: server
         user: fluid
     spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-pv-claim
       containers:
       - name: server
         image: evilben/fluidmedia_crm:latest
@@ -100,6 +116,9 @@ spec:
             secretKeyRef:
               name: postgres-pass
               key: pass
+        volumeMounts:
+        - name: data
+          mountPath: /data
         args: ["/fluidmedia_crm", "-db-connect", "user=postgres password=%s host=postgres dbname=postgres sslmode=disable"]
 ---
 apiVersion: v1
