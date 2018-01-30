@@ -112,32 +112,36 @@ func handle404(w http.ResponseWriter, r *http.Request) {
 	display404(w)
 }
 
-func staticHandler(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path[1:]
-	data, err := ioutil.ReadFile("static/" + string(path))
+func staticHandler(base string) http.Handler {
+	return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request) {
+		path := r.URL.Path[1:]
+		data, err := ioutil.ReadFile(base + "/" + string(path))
 
-	if err == nil {
-		var contentType string
+		if err == nil {
+			var contentType string
 
-		if strings.HasSuffix(path, ".css") {
-			contentType = "text/css"
-		} else if strings.HasSuffix(path, ".html") {
-			contentType = "text/html"
-		} else if strings.HasSuffix(path, ".js") {
-			contentType = "application/javascript"
-		} else if strings.HasSuffix(path, ".png") {
-			contentType = "image/png"
-		} else if strings.HasSuffix(path, ".svg") {
-			contentType = "image/svg+xml"
+			if strings.HasSuffix(path, ".css") {
+				contentType = "text/css"
+			} else if strings.HasSuffix(path, ".html") {
+				contentType = "text/html"
+			} else if strings.HasSuffix(path, ".js") {
+				contentType = "application/javascript"
+			} else if strings.HasSuffix(path, ".png") {
+				contentType = "image/png"
+			} else if strings.HasSuffix(path, ".jpg") {
+				contentType = "image/jpeg"
+			} else if strings.HasSuffix(path, ".svg") {
+				contentType = "image/svg+xml"
+			} else {
+				contentType = "text/plain"
+			}
+
+			w.Header().Add("Content-Type", contentType)
+			w.Write(data)
 		} else {
-			contentType = "text/plain"
+			display404(w)
 		}
-
-		w.Header().Add("Content-Type", contentType)
-		w.Write(data)
-	} else {
-		display404(w)
-	}
+	})
 }
 
 func handleLogin(w http.ResponseWriter, r *http.Request) {
@@ -217,7 +221,8 @@ func serveHttp(model *model.Model, pages []*Page, cfg *Config) {
 
 	r.NotFoundHandler = http.HandlerFunc(handle404)
 
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", http.HandlerFunc(staticHandler)))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", staticHandler("static")))
+	r.PathPrefix("/data/").Handler(http.StripPrefix("/data", staticHandler("data")))
 
 
 	log.Println("Listening...")

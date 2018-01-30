@@ -48,7 +48,7 @@ func handleUsersEdit(m *model.Model, page *Page, user *model.User, w http.Respon
 			Email: r.Form.Get("email"),
 			Phone: r.Form.Get("phone"),
 			IsAdmin: r.Form.Get("isadmin") == "checked",
-			Login: r.Form.Get("logsin"),
+			Login: r.Form.Get("login"),
 			Pass: r.Form.Get("pass"),
 			Disabled: u.Disabled,
 			TotpSecret: u.TotpSecret,
