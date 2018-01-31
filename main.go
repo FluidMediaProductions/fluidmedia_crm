@@ -38,7 +38,22 @@ func parseFlags() *Config {
 }
 
 func handleIndex(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
-	display(w, "index", page, user)
+	type IndexData struct {
+		UncontactedLeads int
+		UncontactedOpportunities int
+	}
+	uncontactedLeads, err := m.UncontactedLeads()
+	if err != nil {
+		display500(w, err)
+	}
+	uncontactedOpportunities, err := m.UncontactedOpportunities()
+	if err != nil {
+		display500(w, err)
+	}
+	displayWithContext(w, "index", page, user, &IndexData{
+		UncontactedLeads: uncontactedLeads,
+		UncontactedOpportunities: uncontactedOpportunities,
+	})
 }
 
 func main() {
