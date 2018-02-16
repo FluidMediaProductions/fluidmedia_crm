@@ -4,10 +4,11 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/mattes/migrate"
-	"github.com/mattes/migrate/database/postgres"
+	"github.com/mattes/migrate/database/mysql"
 	_ "github.com/mattes/migrate/source/file"
 	"github.com/alexedwards/scs/stores/pgstore"
 	"time"
+	"github.com/mattes/migrate/database/postgres"
 )
 
 type Config struct {
@@ -56,13 +57,13 @@ func InitDb(cfg Config) (*pgDb, error) {
 }
 
 func (p *pgDb) migrate() error {
-	driver, err := postgres.WithInstance(p.dbConn.DB, &postgres.Config{})
+	driver, err := mysql.WithInstance(p.dbConn.DB, &mysql.Config{})
 	if err != nil {
 		return err
 	}
 	m, err := migrate.NewWithDatabaseInstance(
 		"file://migrations",
-		"postgres", driver)
+		"mysql", driver)
 	if err != nil {
 		return err
 	}
