@@ -1,70 +1,3 @@
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: chf-postgres-pv-claim
-  namespace: crm
-  labels:
-    user: chf
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
----
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: chf-postgres
-  namespace: crm
-  labels:
-    user: chf
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: postgres
-        user: chf
-    spec:
-      volumes:
-      - name: postgres-data
-        persistentVolumeClaim:
-          claimName: chf-postgres-pv-claim
-      containers:
-      - name: postgres
-        image: postgres
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 5432
-            protocol: TCP
-        env:
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: chf-postgres-pass
-              key: pass
-        volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
----
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: crm
-  name: chf-postgres
-  labels:
-    app: postgres
-    user: chf
-spec:
-  selector:
-    app: postgres
-    user: chf
-  ports:
-  - port: 5432
-    protocol: TCP
-    targetPort: 5432
----
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -92,17 +25,25 @@ spec:
           - containerPort: 8080
             protocol: TCP
         env:
+        - name: DB_USER
+          value: chf_crm
+        - name: DB_NAME
+          value: chf_crm
         - name: CLIENT_NAME
           value: "CHF"
-        - name: POSTGRES_PASSWORD
+        - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: chf-postgres-pass
+              name: chf-db-pass
               key: pass
+        - name: DB_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
         volumeMounts:
         - name: data
           mountPath: /data
-        args: ["/fluidmedia_crm", "-db-connect", "user=postgres password=%s host=chf-postgres dbname=postgres sslmode=disable"]
+        args: ["/fluidmedia_crm"]
 ---
 apiVersion: v1
 kind: Service
