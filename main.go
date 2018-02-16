@@ -20,15 +20,25 @@ func parseFlags() *Config {
 	cfg := &Config{}
 
 	flag.StringVar(&cfg.ListenSpec, "listen", ":8080", "HTTP listen spec")
-	flag.StringVar(&cfg.Db.ConnectString, "db-connect", "user=postgres password=%s host=127.0.0.1 dbname=fluidmedia_crm", "DB Connect String")
 
 	flag.Parse()
 
-	pass := os.Getenv("POSTGRES_PASSWORD")
+	user := os.Getenv("DB_USER")
+	if user == "" {
+		user = "root"
+	}
+	pass := os.Getenv("DB_PASSWORD")
 	if pass == "" {
 		pass = "Rwbwreia123&"
 	}
-	cfg.Db.ConnectString = fmt.Sprintf(cfg.Db.ConnectString, pass)
+	host := os.Getenv("DB_HOST")
+	dbName := os.Getenv("DB_PASSWORD")
+	if dbName == "" {
+		dbName = "fluidmedia_crm"
+	}
+
+	connString := "%s:%s@%s/%s?charset=utf8"
+	cfg.Db.ConnectString = fmt.Sprintf(connString, user, pass, host, dbName)
 
 	return cfg
 }

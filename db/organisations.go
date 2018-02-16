@@ -11,7 +11,7 @@ func (p *pgDb) prepareOrganisationsSqlStatements() (err error) {
 	if p.sqlInsertOrganisation, err = p.dbConn.PrepareNamed("INSERT INTO organisations (name, email, image, phone," +
 		" website, twitter, youtube, instagram, facebook, address, description)" +
 		" VALUES (:name, :email, :image, :phone, :website, :twitter, :youtube, :instagram, :facebook, :address," +
-		" :description) RETURNING id"); err != nil { return err }
+		" :description)"); err != nil { return err }
 	if p.sqlDeleteOrganisation, err = p.dbConn.Preparex("DELETE FROM organisations WHERE id=$1"); err != nil { return err }
     return nil
 }
@@ -38,12 +38,15 @@ func (p *pgDb) UpdateOrganisation(organisation *model.Organisation) error {
 }
 
 func (p *pgDb) NewOrganisation() (int, error) {
-	id := 0
-	err := p.sqlInsertOrganisation.QueryRow(&model.Organisation{}).Scan(&id)
+	res, err := p.sqlInsertOrganisation.Exec(&model.Organisation{})
 	if err != nil {
 		return 0, err
 	}
-	return id, nil
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return int(id), nil
 }
 
 func (p *pgDb) DeleteOrganisation(id int) error {

@@ -18,7 +18,7 @@ func (p *pgDb) prepareUsersSqlStatements() (err error) {
 	}
 	if p.sqlInsertUser, err = p.dbConn.PrepareNamed("INSERT INTO users (name, email, isAdmin, phone, disabled," +
 		" login, pass, totp_secret)" +
-		" VALUES (:name, :email, :isadmin, :phone, :disabled,:login, :pass, :totp_secret) RETURNING id"); err != nil {
+		" VALUES (:name, :email, :isadmin, :phone, :disabled,:login, :pass, :totp_secret)"); err != nil {
 		return err
 	}
 	if p.sqlDeleteUser, err = p.dbConn.Preparex("DELETE FROM users WHERE id=$1"); err != nil {
@@ -54,12 +54,15 @@ func (p *pgDb) UpdateUserPass(user *model.User) error {
 }
 
 func (p *pgDb) NewUser() (int, error) {
-	id := 0
-	err := p.sqlInsertUser.QueryRow(&model.User{}).Scan(&id)
+	res, err := p.sqlInsertUser.Exec(&model.User{})
 	if err != nil {
 		return 0, err
 	}
-	return id, nil
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return int(id), nil
 }
 
 func (p *pgDb) DeleteUser(id int) error {

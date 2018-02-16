@@ -18,7 +18,7 @@ func (p *pgDb) prepareContactsSqlStatements() (err error) {
 	if p.sqlInsertContact, err = p.dbConn.PrepareNamed("INSERT INTO contacts (name, email, image, state, contacted_state," +
 		" phone, mobile, website, twitter, youtube, instagram, facebook, address, description, organisation_id)" +
 		" VALUES (:name, :email, :image, :state, :contacted_state, :phone, :mobile, :website, :twitter, :youtube, :instagram," +
-		" :facebook, :address, :description, :organisation_id) RETURNING id"); err != nil {
+		" :facebook, :address, :description, :organisation_id)"); err != nil {
 		return err
 	}
 	if p.sqlDeleteContact, err = p.dbConn.Preparex("DELETE FROM contacts WHERE id=$1"); err != nil {
@@ -49,12 +49,15 @@ func (p *pgDb) UpdateContact(contact *model.Contact) error {
 }
 
 func (p *pgDb) NewContact() (int, error) {
-	id := 0
-	err := p.sqlInsertContact.QueryRow(&model.Contact{}).Scan(&id)
+	res, err := p.sqlInsertContact.Exec(&model.Contact{})
 	if err != nil {
 		return 0, err
 	}
-	return id, nil
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return int(id), nil
 }
 
 func (p *pgDb) DeleteContact(id int) error {

@@ -2,7 +2,7 @@ package db
 
 import (
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/postgres"
 	_ "github.com/mattes/migrate/source/file"
@@ -38,7 +38,7 @@ type pgDb struct {
 }
 
 func InitDb(cfg Config) (*pgDb, error) {
-	if dbConn, err := sqlx.Connect("postgres", cfg.ConnectString); err != nil {
+	if dbConn, err := sqlx.Connect("mysql", cfg.ConnectString); err != nil {
 		return nil, err
 	} else {
 		p := &pgDb{dbConn: dbConn}
