@@ -22,13 +22,13 @@ func handleContacts(m *model.Model, page *Page, user *model.User, w http.Respons
 	contacts, err := m.Contacts()
 	if err != nil {
 		log.Printf("Error getting contacts: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	organisations, err := m.Organisations()
 	if err != nil {
 		log.Printf("Error getting organisationss: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	displayWithContext(w, "contacts", page, user, &ContactsContext{Contacts: contacts, ContactStates: m.ContactStates(),
@@ -44,20 +44,20 @@ func handleContactsEdit(m *model.Model, page *Page, user *model.User, w http.Res
 		return
 	} else if err != nil {
 		log.Printf("Error getting contact: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	if r.Method == "GET" {
 		organisations, err := m.Organisations()
 		if err != nil {
 			log.Printf("Error getting organisationss: %v", err)
-			display500(w)
+			display500(w, err)
 			return
 		}
 		displayWithContext(w, "contacts-edit", page, user, &ContactsContext{Contact: contact,
 			ContactStates: m.ContactStates(), ContactedStates: m.ContactedStates(), Organisations: organisations})
 	} else if r.Method == "POST" {
-		r.ParseForm()
+		r.ParseMultipartForm(32<<20)
 		state, err := strconv.Atoi(r.Form.Get("state"))
 		if err != nil {
 			state = 1
@@ -70,12 +70,26 @@ func handleContactsEdit(m *model.Model, page *Page, user *model.User, w http.Res
 		if err != nil {
 			organisation = 0
 		}
+		file, _, err := r.FormFile("image")
+		var fileName string
+		if err == http.ErrMissingFile {
+			fileName = contact.Image
+		} else if err != nil {
+			display500(w, err)
+			return
+		} else {
+			fileName, err = uploadFile(file)
+			if err != nil {
+				display500(w, err)
+				return
+			}
+		}
 		newContact := &model.Contact{
 			ID:             id,
 			Name:           r.Form.Get("name"),
 			State:          state,
 			ContactedState: contactedState,
-			Image:          contact.Image,
+			Image:          fileName,
 			Email:          r.Form.Get("email"),
 			Phone:          r.Form.Get("phone"),
 			Mobile:         r.Form.Get("mobile"),
@@ -91,7 +105,7 @@ func handleContactsEdit(m *model.Model, page *Page, user *model.User, w http.Res
 		err = m.SaveContact(newContact)
 		if err != nil {
 			log.Printf("Error updating contact: %v", err)
-			display500(w)
+			display500(w, err)
 			return
 		}
 		http.Redirect(w, r, "/contacts", 302)
@@ -102,7 +116,7 @@ func handleContactsNew(m *model.Model, page *Page, user *model.User, w http.Resp
 	contactId, err := m.NewContact()
 	if err != nil {
 		log.Printf("Error creating new contact: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/contacts/%d", contactId), 302)
@@ -114,7 +128,7 @@ func handleContactsDelete(m *model.Model, page *Page, user *model.User, w http.R
 	err := m.DeleteContact(id)
 	if err != nil {
 		log.Printf("Error deleting contact: %v", err)
-		display500(w)
+		display500(w, err)
 		return
 	}
 	http.Redirect(w, r, "/contacts", 302)

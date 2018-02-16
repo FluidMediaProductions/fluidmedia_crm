@@ -12,6 +12,7 @@ import (
 
 type Config struct {
 	ListenSpec string
+	ClientName string
 
 	Db db.Config
 }
@@ -39,12 +40,30 @@ func parseFlags() *Config {
 
 	connString := "%s:%s@%s/%s?charset=utf8"
 	cfg.Db.ConnectString = fmt.Sprintf(connString, user, pass, host, dbName)
+	log.Printf("Connecting to database: %s", cfg.Db.ConnectString)
+
+	cfg.ClientName = os.Getenv("CLIENT_NAME")
 
 	return cfg
 }
 
 func handleIndex(m *model.Model, page *Page, user *model.User, w http.ResponseWriter, r *http.Request) {
-	display(w, "index", page, user)
+	type IndexData struct {
+		UncontactedLeads int
+		UncontactedOpportunities int
+	}
+	uncontactedLeads, err := m.UncontactedLeads()
+	if err != nil {
+		display500(w, err)
+	}
+	uncontactedOpportunities, err := m.UncontactedOpportunities()
+	if err != nil {
+		display500(w, err)
+	}
+	displayWithContext(w, "index", page, user, &IndexData{
+		UncontactedLeads: uncontactedLeads,
+		UncontactedOpportunities: uncontactedOpportunities,
+	})
 }
 
 func main() {
@@ -174,5 +193,5 @@ func main() {
 
 	modelInst := model.New(dbInst)
 
-	serveHttp(modelInst, pages, cfg.ListenSpec)
+	serveHttp(modelInst, pages, cfg)
 }

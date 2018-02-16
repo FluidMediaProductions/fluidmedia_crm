@@ -1,4 +1,4 @@
-{{ define "footer" }}
+{{ define "scripts" }}
     <script src="/static/plugins/jquery/jquery.min.js"></script>
     <script src="/static/plugins/bootstrap/js/bootstrap.js"></script>
     <script src="/static/plugins/bootstrap-select/js/bootstrap-select.js"></script>
@@ -20,6 +20,9 @@
 
     <script src="/static/js/admin.js"></script>
     <script src="/static/js/custom.js"></script>
+{{ end }}
+{{ define "footer" }}
+{{ template "scripts" }}
 </body>
 </html>
 {{ end }}

@@ -104,6 +104,33 @@ func (m *Model) SearchContacts(search string) ([]*Contact, error) {
 	return foundContacts, nil
 }
 
+func (m *Model) UncontactedLeads() (int, error) {
+	var count int
+	contacts, err := m.Contacts()
+	if err != nil {
+		return 0, err
+	}
+	for _, c := range contacts {
+		if c.State == 0 && c.ContactedState == 0 {
+			count += 1
+		}
+	}
+	return count, nil
+}
+
+func (m *Model) UncontactedOpportunities() (int, error) {
+	var count int
+	contacts, err := m.Contacts()
+	if err != nil {
+		return 0, err
+	}
+	for _, c := range contacts {
+		if c.State == 1 && c.ContactedState == 0 {
+			count += 1
+		}
+	}
+	return count, nil
+}
 
 func (c *Contact) StateName() [2]string {
 	return contactStates[c.State]

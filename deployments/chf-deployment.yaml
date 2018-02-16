@@ -1,0 +1,146 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: chf-postgres-pv-claim
+  namespace: crm
+  labels:
+    user: chf
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: chf-postgres
+  namespace: crm
+  labels:
+    user: chf
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+        user: chf
+    spec:
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: chf-postgres-pv-claim
+      containers:
+      - name: postgres
+        image: postgres
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5432
+            protocol: TCP
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: chf-postgres-pass
+              key: pass
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: crm
+  name: chf-postgres
+  labels:
+    app: postgres
+    user: chf
+spec:
+  selector:
+    app: postgres
+    user: chf
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: chf-server
+  namespace: crm
+  labels:
+    user: chf
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: server
+        user: chf
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-pv-claim
+      containers:
+      - name: server
+        image: evilben/fluidmedia_crm:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        env:
+        - name: CLIENT_NAME
+          value: "CHF"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: chf-postgres-pass
+              key: pass
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        args: ["/fluidmedia_crm", "-db-connect", "user=postgres password=%s host=chf-postgres dbname=postgres sslmode=disable"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: crm
+  name: chf-server
+  labels:
+    app: server
+    user: chf
+spec:
+  selector:
+    app: server
+    user: chf
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: chf-server
+  namespace: crm
+  labels:
+    app: server
+    user: chf
+  annotations:
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+  - hosts:
+    - "crm.chf.uk.com"
+    secretName: chf-server-tls
+  rules:
+  - host: "crm.chf.uk.com"
+    http:
+      paths:
+      - path: "/"
+        backend:
+          serviceName: chf-server
+          servicePort: 8080

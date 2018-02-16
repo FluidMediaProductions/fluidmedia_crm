@@ -3,7 +3,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
@@ -13,7 +13,8 @@
                         <div class="body">
                             <div class="row clearfix">
                                 <div class="col-sm-2">
-                                    <img src="/static/images/{{ .Context.Contact.Image }}" class="img-circle" style="width: 100%" alt="">
+                                    <img id="profileImage" src="/data/{{ .Context.Contact.Image }}" class="img-circle" style="width: 100%" alt="">
+                                    <input id="imageUpload" type="file" name="image" style="display: none;">
                                 </div>
                                 <div class="col-sm-10">
                                     <div class="form-group">
@@ -215,5 +216,24 @@
     </div>
 </section>
 
-{{ template "footer" . }}
+{{ template "scripts" . }}
+<script>
+    $(function () {
+        function preview(uploader) {
+            if (uploader.files && uploader.files[0]) {
+                $('#profileImage').attr('src',
+                        window.URL.createObjectURL(uploader.files[0]));
+            }
+        }
+
+        $("#profileImage").click(function () {
+            $("#imageUpload").click();
+        });
+        $("#imageUpload").change(function(){
+            preview(this);
+        });
+    });
+</script>
+</body>
+</html>
 {{ end }}

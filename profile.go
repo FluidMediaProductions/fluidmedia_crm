@@ -41,7 +41,7 @@ func handleProfile(m *model.Model, page *Page, user *model.User, w http.Response
 		err := m.SaveUser(newUser)
 		if err != nil {
 			log.Printf("Error updating user: %v", err)
-			display500(w)
+			display500(w, err)
 			return
 		}
 		http.Redirect(w, r, "/profile", 302)
@@ -56,7 +56,7 @@ func handleProfile2FA(m *model.Model, page *Page, user *model.User, w http.Respo
 				AccountName: user.Login,
 			})
 			if err != nil {
-				display500(w)
+				display500(w, err)
 				return
 			}
 
@@ -92,7 +92,7 @@ func handleProfile2FA(m *model.Model, page *Page, user *model.User, w http.Respo
 			err := m.SaveUser(newUser)
 			if err != nil {
 				log.Printf("Error updating user: %v", err)
-				display500(w)
+				display500(w, err)
 				return
 			}
 			http.Redirect(w, r, "/profile", 302)
@@ -119,7 +119,7 @@ func handleProfile2FA(m *model.Model, page *Page, user *model.User, w http.Respo
 			err := m.SaveUser(newUser)
 			if err != nil {
 				log.Printf("Error updating user: %v", err)
-				display500(w)
+				display500(w, err)
 				return
 			}
 			http.Redirect(w, r, "/profile", 302)
