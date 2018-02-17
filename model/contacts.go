@@ -6,21 +6,21 @@ import (
 )
 
 type Contact struct {
-	ID             int
-	Name           string
-	Image          string
-	State          int
+	ID             int `db:"id"`
+	Name           string `db:"name"`
+	Image          string `db:"image"`
+	State          int `db:"state"`
 	ContactedState int `db:"contacted_state"`
-	Email          string
-	Phone          string
-	Mobile         string
-	Website        string
-	Twitter        string
-	Youtube        string
-	Instagram      string
-	Facebook       string
-	Address        string
-	Description    string
+	Email          string `db:"email"`
+	Phone          string `db:"phone"`
+	Mobile         string `db:"mobile"`
+	Website        string `db:"website"`
+	Twitter        string `db:"twitter"`
+	Youtube        string `db:"youtube"`
+	Instagram      string `db:"instagram"`
+	Facebook       string `db:"facebook"`
+	Address        string `db:"address"`
+	Description    string `db:"description"`
 	OrganisationId int `db:"organisation_id"`
 	Organisation   *Organisation
 }

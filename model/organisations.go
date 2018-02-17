@@ -6,18 +6,18 @@ import (
 )
 
 type Organisation struct {
-	ID          int
-	Name        string
-	Image       string
-	Email       string
-	Phone       string
-	Website     string
-	Twitter     string
-	Youtube     string
-	Instagram   string
-	Facebook    string
-	Address     string
-	Description string
+	ID          int `db:"id"`
+	Name        string `db:"name"`
+	Image       string `db:"image"`
+	Email       string `db:"email"`
+	Phone       string `db:"phone"`
+	Website     string `db:"website"`
+	Twitter     string `db:"twitter"`
+	Youtube     string `db:"youtube"`
+	Instagram   string `db:"instagram"`
+	Facebook    string `db:"facebook"`
+	Address     string `db:"address"`
+	Description string `db:"description"`
 }
 
 func (m *Model) Organisations() ([]*Organisation, error) {

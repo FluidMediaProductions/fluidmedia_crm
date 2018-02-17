@@ -6,14 +6,14 @@ import (
 )
 
 type User struct {
-	ID         int
-	Name       string
-	Login      string
-	Pass       string
-	Email      string
-	Phone      string
-	IsAdmin    bool
-	Disabled   bool
+	ID         int `db:"ID"`
+	Name       string `db:"name"`
+	Login      string `db:"login"`
+	Pass       string `db:"pass"`
+	Email      string `db:"email"`
+	Phone      string `db:"phone"`
+	IsAdmin    bool `db:"isAdmin"`
+	Disabled   bool `db:"disabled"`
 	TotpSecret string `db:"totp_secret"`
 }
 
