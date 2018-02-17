@@ -6,7 +6,7 @@ func (p *pgDb) prepareUsersSqlStatements() (err error) {
 	if p.sqlSelectUsers, err = p.dbConn.Preparex("SELECT * FROM users ORDER BY id"); err != nil {
 		return err
 	}
-	if p.sqlSelectUser, err = p.dbConn.Preparex("SELECT * FROM users WHERE id=$1"); err != nil {
+	if p.sqlSelectUser, err = p.dbConn.Preparex("SELECT * FROM users WHERE id=?"); err != nil {
 		return err
 	}
 	if p.sqlUpdateUser, err = p.dbConn.PrepareNamed("UPDATE users SET name=:name, email=:email," +
@@ -21,7 +21,7 @@ func (p *pgDb) prepareUsersSqlStatements() (err error) {
 		" VALUES (:name, :email, :isadmin, :phone, :disabled,:login, :pass, :totp_secret)"); err != nil {
 		return err
 	}
-	if p.sqlDeleteUser, err = p.dbConn.Preparex("DELETE FROM users WHERE id=$1"); err != nil {
+	if p.sqlDeleteUser, err = p.dbConn.Preparex("DELETE FROM users WHERE id=?"); err != nil {
 		return err
 	}
 	return nil

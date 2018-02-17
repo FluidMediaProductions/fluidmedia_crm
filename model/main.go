@@ -1,6 +1,8 @@
 package model
 
-import "github.com/alexedwards/scs/stores/pgstore"
+import (
+	"github.com/alexedwards/scs/stores/mysqlstore"
+)
 
 type db interface {
 	SelectContacts() ([]*Contact, error)
@@ -22,7 +24,7 @@ type db interface {
 	NewUser() (int, error)
 	DeleteUser(int) error
 
-	SessionStore() *pgstore.PGStore
+	SessionStore() *mysqlstore.MySQLStore
 }
 
 type Model struct {
@@ -35,7 +37,7 @@ func New(db db) *Model {
 	}
 }
 
-func (m *Model) NewSessionStore() *pgstore.PGStore {
+func (m *Model) NewSessionStore() *mysqlstore.MySQLStore {
 	return m.db.SessionStore()
 }
 

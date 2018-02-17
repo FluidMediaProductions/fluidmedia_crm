@@ -1,2 +1,2 @@
 DROP TABLE sessions;
-DROP INDEX sessions_expiry_idx;
+DROP INDEX sessions_expiry_idx ON sessions;

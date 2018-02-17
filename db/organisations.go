@@ -3,20 +3,30 @@ package db
 import "github.com/fluidmediaproductions/fluidmedia_crm/model"
 
 func (p *pgDb) prepareOrganisationsSqlStatements() (err error) {
-	if p.sqlSelectOrganisations, err = p.dbConn.Preparex("SELECT * FROM organisations ORDER BY id"); err != nil { return err}
-	if p.sqlSelectOrganisation, err = p.dbConn.Preparex("SELECT * FROM organisations WHERE id=$1"); err != nil { return err }
+	if p.sqlSelectOrganisations, err = p.dbConn.Preparex("SELECT * FROM organisations ORDER BY id"); err != nil {
+		return err
+	}
+	if p.sqlSelectOrganisation, err = p.dbConn.Preparex("SELECT * FROM organisations WHERE id=?"); err != nil {
+		return err
+	}
 	if p.sqlUpdateOrganisation, err = p.dbConn.PrepareNamed("UPDATE organisations SET name=:name, email=:email," +
 		" image=:image, phone=:phone, website=:website, twitter=:twitter, youtube=:youtube, instagram=:instagram," +
-		" facebook=:facebook, address=:address, description=:description WHERE id=:id"); err != nil { return err }
+		" facebook=:facebook, address=:address, description=:description WHERE id=:id"); err != nil {
+		return err
+	}
 	if p.sqlInsertOrganisation, err = p.dbConn.PrepareNamed("INSERT INTO organisations (name, email, image, phone," +
 		" website, twitter, youtube, instagram, facebook, address, description)" +
 		" VALUES (:name, :email, :image, :phone, :website, :twitter, :youtube, :instagram, :facebook, :address," +
-		" :description)"); err != nil { return err }
-	if p.sqlDeleteOrganisation, err = p.dbConn.Preparex("DELETE FROM organisations WHERE id=$1"); err != nil { return err }
-    return nil
+		" :description)"); err != nil {
+		return err
+	}
+	if p.sqlDeleteOrganisation, err = p.dbConn.Preparex("DELETE FROM organisations WHERE id=?"); err != nil {
+		return err
+	}
+	return nil
 }
 
-func (p *pgDb) SelectOrganisations() ([]*model.Organisation, error){
+func (p *pgDb) SelectOrganisations() ([]*model.Organisation, error) {
 	organisation := make([]*model.Organisation, 0)
 	if err := p.sqlSelectOrganisations.Select(&organisation); err != nil {
 		return nil, err
@@ -24,7 +34,7 @@ func (p *pgDb) SelectOrganisations() ([]*model.Organisation, error){
 	return organisation, nil
 }
 
-func (p *pgDb) SelectOrganisation(id int) (*model.Organisation, error){
+func (p *pgDb) SelectOrganisation(id int) (*model.Organisation, error) {
 	var organisation model.Organisation
 	if err := p.sqlSelectOrganisation.Get(&organisation, id); err != nil {
 		return nil, err

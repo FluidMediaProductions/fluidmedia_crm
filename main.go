@@ -38,7 +38,7 @@ func parseFlags() *Config {
 		dbName = "fluidmedia_crm"
 	}
 
-	connString := "%s:%s@tcp(%s)/%s?charset=utf8"
+	connString := "%s:%s@tcp(%s)/%s?charset=utf8&multiStatements=true"
 	cfg.Db.ConnectString = fmt.Sprintf(connString, user, pass, host, dbName)
 	log.Printf("Connecting to database: %s", cfg.Db.ConnectString)
 

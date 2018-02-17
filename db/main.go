@@ -6,9 +6,8 @@ import (
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/mysql"
 	_ "github.com/mattes/migrate/source/file"
-	"github.com/alexedwards/scs/stores/pgstore"
 	"time"
-	"github.com/mattes/migrate/database/postgres"
+	"github.com/alexedwards/scs/stores/mysqlstore"
 )
 
 type Config struct {
@@ -88,6 +87,6 @@ func (p *pgDb) prepareSqlStatements() (err error) {
 	return nil
 }
 
-func (p *pgDb) SessionStore() *pgstore.PGStore {
-	return pgstore.New(p.dbConn.DB, time.Minute)
+func (p *pgDb) SessionStore() *mysqlstore.MySQLStore {
+	return mysqlstore.New(p.dbConn.DB, time.Minute)
 }
