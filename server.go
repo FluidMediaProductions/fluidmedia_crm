@@ -226,5 +226,5 @@ func serveHttp(model *model.Model, pages []*Page, cfg *Config) {
 
 
 	log.Println("Listening...")
-	http.ListenAndServe(cfg.ListenSpec, sessionManager.Use(r))
+	log.Fatalln(http.ListenAndServe(cfg.ListenSpec, sessionManager.Use(r)))
 }

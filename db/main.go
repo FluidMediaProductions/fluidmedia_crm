@@ -16,39 +16,18 @@ type Config struct {
 
 type pgDb struct {
 	dbConn *sqlx.DB
-
-	sqlSelectContacts *sqlx.Stmt
-	sqlSelectContact  *sqlx.Stmt
-	sqlUpdateContact  *sqlx.NamedStmt
-	sqlInsertContact  *sqlx.NamedStmt
-	sqlDeleteContact  *sqlx.Stmt
-
-	sqlSelectOrganisations *sqlx.Stmt
-	sqlSelectOrganisation  *sqlx.Stmt
-	sqlUpdateOrganisation  *sqlx.NamedStmt
-	sqlInsertOrganisation  *sqlx.NamedStmt
-	sqlDeleteOrganisation  *sqlx.Stmt
-
-	sqlSelectUsers    *sqlx.Stmt
-	sqlSelectUser     *sqlx.Stmt
-	sqlUpdateUser     *sqlx.NamedStmt
-	sqlUpdateUserPass *sqlx.NamedStmt
-	sqlInsertUser     *sqlx.NamedStmt
-	sqlDeleteUser     *sqlx.Stmt
 }
 
 func InitDb(cfg Config) (*pgDb, error) {
-	if dbConn, err := sqlx.Connect("mysql", cfg.ConnectString); err != nil {
+	if dbConn, err := sqlx.Open("mysql", cfg.ConnectString); err != nil {
 		return nil, err
 	} else {
+		dbConn.SetMaxIdleConns(0)
 		p := &pgDb{dbConn: dbConn}
 		if err := p.dbConn.Ping(); err != nil {
 			return nil, err
 		}
 		if err := p.migrate(); err != nil {
-			return nil, err
-		}
-		if err := p.prepareSqlStatements(); err != nil {
 			return nil, err
 		}
 		return p, nil
@@ -70,19 +49,6 @@ func (p *pgDb) migrate() error {
 		if err != migrate.ErrNoChange {
 			return err
 		}
-	}
-	return nil
-}
-
-func (p *pgDb) prepareSqlStatements() (err error) {
-	if err := p.prepareContactsSqlStatements(); err != nil {
-		return err
-	}
-	if err := p.prepareOrganisationsSqlStatements(); err != nil {
-		return err
-	}
-	if err := p.prepareUsersSqlStatements(); err != nil {
-		return err
 	}
 	return nil
 }
