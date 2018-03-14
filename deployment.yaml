@@ -3,17 +3,33 @@ kind: Namespace
 metadata:
   name: crm
 ---
-kind: PersistentVolumeClaim
-apiVersion: v1
+piVersion: v1
+kind: Endpoints
 metadata:
-  name: data-pv-claim
+  name: glusterfs-cluster
+  namespace: crm
+subsets:
+  - addresses:
+    - ip: 138.201.93.184
+    ports:
+    - port: 1
+  - addresses:
+    - ip: 88.99.122.54
+    ports:
+    - port: 1
+  - addresses:
+    - ip: 195.201.58.86
+    ports:
+    - port: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: glusterfs-cluster
   namespace: crm
 spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
+  ports:
+  - port: 1
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -32,8 +48,9 @@ spec:
     spec:
       volumes:
       - name: data
-        persistentVolumeClaim:
-          claimName: data-pv-claim
+        glusterfs:
+          endpoints: glusterfs-cluster
+          path: kubes-pv
       containers:
       - name: server
         image: evilben/fluidmedia_crm:latest
@@ -61,6 +78,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
+          subPath: crm/data
 ---
 apiVersion: v1
 kind: Service

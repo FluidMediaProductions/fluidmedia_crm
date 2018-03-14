@@ -15,8 +15,9 @@ spec:
     spec:
       volumes:
       - name: data
-        persistentVolumeClaim:
-          claimName: data-pv-claim
+        glusterfs:
+          endpoints: glusterfs-cluster
+          path: kubes-pv
       containers:
       - name: server
         image: evilben/fluidmedia_crm:latest
@@ -43,6 +44,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
+          subPath: crm/data
         args: ["/fluidmedia_crm"]
 ---
 apiVersion: v1
