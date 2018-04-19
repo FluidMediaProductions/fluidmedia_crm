@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: crm
 ---
-piVersion: v1
+apiVersion: v1
 kind: Endpoints
 metadata:
   name: glusterfs-cluster
@@ -31,15 +31,41 @@ spec:
   ports:
   - port: 1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: crm
+spec:
+  ports:
+    - port: 3306
+      protocol: TCP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: mysql
+  namespace: crm
+subsets:
+  - addresses:
+      - ip: 195.201.58.86
+    ports:
+      - port: 3306
+---
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: server
   namespace: crm
   labels:
+    app: server
     user: fluid
 spec:
   replicas: 3
+  selector:
+    matchLabels:
+      app: server
+      user: fluid
   template:
     metadata:
       labels:
@@ -71,9 +97,7 @@ spec:
               name: fluidmedia-db-pass
               key: pass
         - name: DB_HOST
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
+          value: mysql
         args: ["/fluidmedia_crm"]
         volumeMounts:
         - name: data
